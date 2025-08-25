@@ -1,0 +1,425 @@
+{
+  "recipes": {
+    "japan": [
+      {
+        "id": "sushi_roll",
+        "name": "Sushi Roll (Maki)",
+        "description": "Traditional sushi roll with fresh fish and seasoned rice, wrapped in nori seaweed.",
+        "emoji": "🍣",
+        "difficulty": "Medium",
+        "prep_time": "45 minutes",
+        "cook_time": "20 minutes",
+        "servings": 4,
+        "dietary_tags": ["gluten-free", "pescatarian"],
+        "ingredients": [
+          { "item": "Sushi rice", "quantity": "2 cups", "category": "grain" },
+          { "item": "Rice vinegar", "quantity": "3 tbsp", "category": "condiment" },
+          { "item": "Sugar", "quantity": "1 tbsp", "category": "sweetener" },
+          { "item": "Salt", "quantity": "1 tsp", "category": "seasoning" },
+          { "item": "Nori sheets", "quantity": "4 sheets", "category": "wrapper" },
+          { "item": "Fresh salmon", "quantity": "200g", "category": "protein" },
+          { "item": "Cucumber", "quantity": "1 medium", "category": "vegetable" },
+          { "item": "Avocado", "quantity": "1 large", "category": "vegetable" },
+          { "item": "Wasabi", "quantity": "to taste", "category": "condiment" },
+          { "item": "Soy sauce", "quantity": "for serving", "category": "condiment" }
+        ],
+        "instructions": [
+          "Rinse sushi rice until water runs clear, then cook according to package instructions.",
+          "Mix rice vinegar, sugar, and salt. Gently fold into warm rice and let cool.",
+          "Place nori sheet on bamboo mat, spread rice evenly leaving 1-inch border.",
+          "Add thin strips of salmon, cucumber, and avocado in a line.",
+          "Roll tightly using bamboo mat, applying gentle pressure.",
+          "Wet knife and slice into 8 pieces with sawing motion.",
+          "Serve with wasabi, soy sauce, and pickled ginger."
+        ],
+        "tips": [
+          "Keep hands wet when handling sushi rice to prevent sticking",
+          "Use very sharp knife for clean cuts",
+          "Roll away from you with firm, even pressure"
+        ]
+      },
+      {
+        "id": "chicken_teriyaki",
+        "name": "Chicken Teriyaki",
+        "description": "Tender chicken glazed with sweet and savory teriyaki sauce, a Japanese-American favorite.",
+        "emoji": "🍗",
+        "difficulty": "Easy",
+        "prep_time": "15 minutes",
+        "cook_time": "20 minutes",
+        "servings": 4,
+        "dietary_tags": ["dairy-free"],
+        "ingredients": [
+          { "item": "Chicken thighs", "quantity": "1 kg", "category": "protein" },
+          { "item": "Soy sauce", "quantity": "1/2 cup", "category": "condiment" },
+          { "item": "Mirin", "quantity": "1/4 cup", "category": "condiment" },
+          { "item": "Sugar", "quantity": "2 tbsp", "category": "sweetener" },
+          { "item": "Garlic", "quantity": "3 cloves", "category": "aromatic" },
+          { "item": "Ginger", "quantity": "1 inch piece", "category": "aromatic" },
+          { "item": "Vegetable oil", "quantity": "2 tbsp", "category": "fat" },
+          { "item": "Sesame seeds", "quantity": "1 tbsp", "category": "garnish" },
+          { "item": "Green onions", "quantity": "2 stalks", "category": "garnish" }
+        ],
+        "instructions": [
+          "Mix soy sauce, mirin, sugar, minced garlic, and ginger for sauce.",
+          "Heat oil in large pan over medium-high heat.",
+          "Season chicken with salt and pepper, cook skin-side down for 5 minutes.",
+          "Flip chicken and cook another 5 minutes until golden.",
+          "Pour teriyaki sauce over chicken, reduce heat to medium.",
+          "Simmer 8-10 minutes until sauce thickens and chicken is cooked through.",
+          "Garnish with sesame seeds and sliced green onions."
+        ],
+        "tips": [
+          "Don't move chicken too early - let it develop a golden crust",
+          "Sauce should coat the back of a spoon when ready"
+        ]
+      },
+      {
+        "id": "miso_soup",
+        "name": "Miso Soup",
+        "description": "Traditional Japanese soup made with fermented soybean paste, tofu, and wakame seaweed.",
+        "emoji": "🍲",
+        "difficulty": "Easy",
+        "prep_time": "10 minutes",
+        "cook_time": "10 minutes",
+        "servings": 4,
+        "dietary_tags": ["vegetarian", "vegan", "gluten-free"],
+        "ingredients": [
+          { "item": "Dashi stock", "quantity": "4 cups", "category": "liquid" },
+          { "item": "Miso paste", "quantity": "3 tbsp", "category": "condiment" },
+          { "item": "Silken tofu", "quantity": "150g", "category": "protein" },
+          { "item": "Wakame seaweed", "quantity": "2 tbsp dried", "category": "vegetable" },
+          { "item": "Green onions", "quantity": "2 stalks", "category": "garnish" }
+        ],
+        "instructions": [
+          "Soak wakame in warm water for 5 minutes until rehydrated.",
+          "Cut tofu into small cubes.",
+          "Heat dashi stock in a pot over medium heat.",
+          "In a small bowl, whisk miso paste with a little warm dashi until smooth.",
+          "Add miso mixture back to pot, stir gently.",
+          "Add tofu and wakame, heat through without boiling.",
+          "Garnish with sliced green onions and serve immediately."
+        ],
+        "tips": [
+          "Never boil miso soup as it will kill beneficial probiotics",
+          "Dissolve miso paste separately to avoid lumps"
+        ]
+      }
+    ],
+    "italy": [
+      {
+        "id": "pasta_carbonara",
+        "name": "Pasta Carbonara",
+        "description": "Classic Roman pasta dish with eggs, cheese, pancetta, and black pepper - no cream needed!",
+        "emoji": "🍝",
+        "difficulty": "Medium",
+        "prep_time": "10 minutes",
+        "cook_time": "15 minutes",
+        "servings": 4,
+        "dietary_tags": [],
+        "ingredients": [
+          { "item": "Spaghetti", "quantity": "400g", "category": "pasta" },
+          { "item": "Pancetta", "quantity": "150g", "category": "protein" },
+          { "item": "Large eggs", "quantity": "3 whole", "category": "protein" },
+          { "item": "Egg yolks", "quantity": "2 extra", "category": "protein" },
+          { "item": "Pecorino Romano", "quantity": "100g grated", "category": "dairy" },
+          { "item": "Black pepper", "quantity": "freshly ground", "category": "seasoning" },
+          { "item": "Sea salt", "quantity": "for pasta water", "category": "seasoning" }
+        ],
+        "instructions": [
+          "Bring large pot of salted water to boil for pasta.",
+          "Cut pancetta into small cubes and cook in large pan until crispy.",
+          "Whisk eggs, egg yolks, and grated cheese in large bowl.",
+          "Add generous amount of freshly ground black pepper to egg mixture.",
+          "Cook spaghetti until al dente, reserve 1 cup pasta water.",
+          "Add hot drained pasta to pan with pancetta off the heat.",
+          "Quickly add egg mixture, tossing constantly with pasta water to create silky sauce.",
+          "Serve immediately with extra cheese and black pepper."
+        ],
+        "tips": [
+          "Remove pan from heat before adding eggs to prevent scrambling",
+          "Save pasta water - the starch helps create the creamy sauce",
+          "Work quickly once pasta is added to maintain temperature"
+        ]
+      },
+      {
+        "id": "margherita_pizza",
+        "name": "Pizza Margherita",
+        "description": "The queen of pizzas with tomato sauce, fresh mozzarella, and basil representing the Italian flag.",
+        "emoji": "🍕",
+        "difficulty": "Medium",
+        "prep_time": "2 hours (including rise)",
+        "cook_time": "12 minutes",
+        "servings": 2,
+        "dietary_tags": ["vegetarian"],
+        "ingredients": [
+          { "item": "Pizza dough", "quantity": "1 ball (300g)", "category": "dough" },
+          { "item": "San Marzano tomatoes", "quantity": "200g crushed", "category": "sauce" },
+          { "item": "Fresh mozzarella", "quantity": "125g", "category": "dairy" },
+          { "item": "Fresh basil", "quantity": "8-10 leaves", "category": "herb" },
+          { "item": "Extra virgin olive oil", "quantity": "2 tbsp", "category": "fat" },
+          { "item": "Sea salt", "quantity": "to taste", "category": "seasoning" },
+          { "item": "Garlic", "quantity": "1 clove", "category": "aromatic" }
+        ],
+        "instructions": [
+          "Preheat oven to highest temperature (250°C/480°F) with pizza stone if available.",
+          "Let pizza dough come to room temperature for 30 minutes.",
+          "Mix crushed tomatoes with minced garlic, salt, and 1 tbsp olive oil.",
+          "Stretch dough gently into 12-inch circle on floured surface.",
+          "Spread thin layer of tomato sauce, leaving 1-inch border for crust.",
+          "Tear mozzarella into chunks and distribute evenly.",
+          "Bake 10-12 minutes until crust is golden and cheese is bubbling.",
+          "Top with fresh basil leaves and drizzle with olive oil before serving."
+        ],
+        "tips": [
+          "Less is more - don't overload with toppings",
+          "High heat is essential for authentic Neapolitan style",
+          "Let dough rest if it springs back while stretching"
+        ]
+      },
+      {
+        "id": "risotto_milanese",
+        "name": "Risotto alla Milanese",
+        "description": "Creamy saffron risotto from Milan, rich with Parmesan and the golden color of saffron.",
+        "emoji": "🍚",
+        "difficulty": "Hard",
+        "prep_time": "10 minutes",
+        "cook_time": "25 minutes",
+        "servings": 4,
+        "dietary_tags": ["vegetarian", "gluten-free"],
+        "ingredients": [
+          { "item": "Arborio rice", "quantity": "320g", "category": "grain" },
+          { "item": "Chicken stock", "quantity": "1.2 liters hot", "category": "liquid" },
+          { "item": "Saffron threads", "quantity": "1/2 tsp", "category": "spice" },
+          { "item": "White onion", "quantity": "1 medium diced", "category": "aromatic" },
+          { "item": "White wine", "quantity": "150ml", "category": "liquid" },
+          { "item": "Butter", "quantity": "60g", "category": "fat" },
+          { "item": "Parmigiano-Reggiano", "quantity": "80g grated", "category": "dairy" },
+          { "item": "Bone marrow", "quantity": "2 tbsp (optional)", "category": "fat" }
+        ],
+        "instructions": [
+          "Soak saffron threads in 2 tbsp warm stock.",
+          "Heat 30g butter in heavy-bottomed pan, sauté onion until translucent.",
+          "Add rice, stir 2 minutes until grains are coated and lightly toasted.",
+          "Pour in wine, stir until absorbed.",
+          "Add hot stock one ladle at a time, stirring constantly.",
+          "Continue for 18-20 minutes until rice is creamy but still al dente.",
+          "Stir in saffron mixture, remaining butter, and half the cheese.",
+          "Rest 1 minute, then serve with remaining Parmigiano."
+        ],
+        "tips": [
+          "Stir constantly to release starch for creaminess",
+          "Stock should always be hot when added",
+          "Risotto should flow like lava when served"
+        ]
+      }
+    ],
+    "mexico": [
+      {
+        "id": "tacos_al_pastor",
+        "name": "Tacos al Pastor",
+        "description": "Marinated pork tacos with pineapple, inspired by Lebanese immigrants to Mexico.",
+        "emoji": "🌮",
+        "difficulty": "Medium",
+        "prep_time": "4 hours (marinating)",
+        "cook_time": "20 minutes",
+        "servings": 6,
+        "dietary_tags": ["dairy-free"],
+        "ingredients": [
+          { "item": "Pork shoulder", "quantity": "1 kg sliced thin", "category": "protein" },
+          { "item": "Guajillo chiles", "quantity": "6 dried", "category": "spice" },
+          { "item": "Chipotle chiles", "quantity": "2 dried", "category": "spice" },
+          { "item": "Pineapple", "quantity": "1/2 fresh", "category": "fruit" },
+          { "item": "White onion", "quantity": "1 large", "category": "aromatic" },
+          { "item": "Garlic", "quantity": "4 cloves", "category": "aromatic" },
+          { "item": "Orange juice", "quantity": "1/2 cup", "category": "liquid" },
+          { "item": "White vinegar", "quantity": "2 tbsp", "category": "acid" },
+          { "item": "Corn tortillas", "quantity": "18 small", "category": "wrapper" },
+          { "item": "Cilantro", "quantity": "1/2 cup chopped", "category": "herb" },
+          { "item": "White onion", "quantity": "1/2 cup diced", "category": "garnish" },
+          { "item": "Lime", "quantity": "3 limes cut in wedges", "category": "garnish" }
+        ],
+        "instructions": [
+          "Toast guajillo and chipotle chiles in dry pan until fragrant.",
+          "Soak chiles in hot water for 20 minutes until soft.",
+          "Blend soaked chiles with garlic, 1/4 onion, orange juice, vinegar, and spices.",
+          "Marinate sliced pork in chile mixture for at least 4 hours.",
+          "Cook marinated pork in large skillet over high heat until edges crisp.",
+          "Grill pineapple slices and dice when charred.",
+          "Warm tortillas on comal or dry skillet.",
+          "Serve pork on tortillas topped with pineapple, onion, cilantro, and lime."
+        ],
+        "tips": [
+          "Slice pork very thin for authentic texture",
+          "High heat creates the essential charred edges",
+          "Traditional trompo (spit) cooking can be mimicked with a hot grill"
+        ]
+      },
+      {
+        "id": "mole_poblano",
+        "name": "Mole Poblano",
+        "description": "Complex sauce with over 20 ingredients including chocolate, chiles, and spices - Mexico's national dish.",
+        "emoji": "🫔",
+        "difficulty": "Hard",
+        "prep_time": "1 hour",
+        "cook_time": "2 hours",
+        "servings": 8,
+        "dietary_tags": ["gluten-free", "dairy-free"],
+        "ingredients": [
+          { "item": "Chicken", "quantity": "1 whole (cut up)", "category": "protein" },
+          { "item": "Mulato chiles", "quantity": "6 dried", "category": "spice" },
+          { "item": "Ancho chiles", "quantity": "4 dried", "category": "spice" },
+          { "item": "Pasilla chiles", "quantity": "3 dried", "category": "spice" },
+          { "item": "Mexican chocolate", "quantity": "2 tablets", "category": "sweetener" },
+          { "item": "Almonds", "quantity": "1/4 cup", "category": "nut" },
+          { "item": "Sesame seeds", "quantity": "2 tbsp", "category": "seed" },
+          { "item": "Raisins", "quantity": "2 tbsp", "category": "fruit" },
+          { "item": "Tomatoes", "quantity": "2 medium", "category": "vegetable" },
+          { "item": "White onion", "quantity": "1/2 medium", "category": "aromatic" },
+          { "item": "Garlic", "quantity": "3 cloves", "category": "aromatic" },
+          { "item": "Cinnamon stick", "quantity": "1 inch", "category": "spice" },
+          { "item": "Cloves", "quantity": "3 whole", "category": "spice" },
+          { "item": "Black peppercorns", "quantity": "5", "category": "spice" },
+          { "item": "Lard or oil", "quantity": "1/4 cup", "category": "fat" }
+        ],
+        "instructions": [
+          "Toast chiles in dry pan until fragrant, remove stems and seeds.",
+          "Soak toasted chiles in hot chicken broth for 30 minutes.",
+          "Separately toast almonds, sesame seeds, and spices until golden.",
+          "Char tomatoes and onion on comal until blackened in spots.",
+          "Blend chiles with soaking liquid until smooth, strain.",
+          "Blend nuts, seeds, spices, tomatoes, onion, and garlic with some broth.",
+          "Fry chile mixture in hot lard for 10 minutes, stirring constantly.",
+          "Add nut mixture, cook 15 minutes more.",
+          "Add chocolate and thin with chicken broth to sauce consistency.",
+          "Simmer cooked chicken in mole for 20 minutes before serving."
+        ],
+        "tips": [
+          "Don't burn the chiles - they should smell toasty, not acrid",
+          "Mole improves with time - make a day ahead if possible",
+          "Traditional recipe uses Mexican chocolate tablets for authentic flavor"
+        ]
+      },
+      {
+        "id": "guacamole",
+        "name": "Traditional Guacamole",
+        "description": "Fresh avocado dip with lime, chilies, and cilantro - a perfect accompaniment to any Mexican meal.",
+        "emoji": "🥑",
+        "difficulty": "Easy",
+        "prep_time": "15 minutes",
+        "cook_time": "0 minutes",
+        "servings": 4,
+        "dietary_tags": ["vegetarian", "vegan", "gluten-free", "keto"],
+        "ingredients": [
+          { "item": "Ripe avocados", "quantity": "4 large", "category": "vegetable" },
+          { "item": "Lime", "quantity": "2 limes juiced", "category": "acid" },
+          { "item": "White onion", "quantity": "1/4 cup finely diced", "category": "aromatic" },
+          { "item": "Jalapeño", "quantity": "1-2 seeded and minced", "category": "spice" },
+          { "item": "Roma tomato", "quantity": "1 seeded and diced", "category": "vegetable" },
+          { "item": "Cilantro", "quantity": "2 tbsp chopped", "category": "herb" },
+          { "item": "Garlic", "quantity": "1 clove minced", "category": "aromatic" },
+          { "item": "Sea salt", "quantity": "1/2 tsp", "category": "seasoning" }
+        ],
+        "instructions": [
+          "Cut avocados in half, remove pits, and scoop flesh into large bowl.",
+          "Add lime juice immediately to prevent browning.",
+          "Mash avocados with fork, leaving some chunks for texture.",
+          "Mix in diced onion, jalapeño, tomato, and garlic.",
+          "Fold in chopped cilantro and season with salt.",
+          "Taste and adjust lime, salt, and jalapeño as needed.",
+          "Serve immediately with tortilla chips or as a taco topping."
+        ],
+        "tips": [
+          "Use the 'squeeze test' - ripe avocados yield to gentle pressure",
+          "Add lime juice first to prevent oxidation",
+          "Save one avocado pit and place in guacamole to slow browning"
+        ]
+      }
+    ],
+    "india": [
+      {
+        "id": "butter_chicken",
+        "name": "Butter Chicken (Murgh Makhani)",
+        "description": "Creamy tomato-based curry with tender marinated chicken, invented in Delhi in the 1950s.",
+        "emoji": "🍛",
+        "difficulty": "Medium",
+        "prep_time": "4 hours (marinating)",
+        "cook_time": "45 minutes",
+        "servings": 6,
+        "dietary_tags": ["gluten-free"],
+        "ingredients": [
+          { "item": "Chicken thighs", "quantity": "1 kg boneless", "category": "protein" },
+          { "item": "Greek yogurt", "quantity": "1/2 cup", "category": "dairy" },
+          { "item": "Lemon juice", "quantity": "2 tbsp", "category": "acid" },
+          { "item": "Garam masala", "quantity": "2 tsp", "category": "spice" },
+          { "item": "Ginger-garlic paste", "quantity": "1 tbsp", "category": "aromatic" },
+          { "item": "Crushed tomatoes", "quantity": "800g can", "category": "vegetable" },
+          { "item": "Heavy cream", "quantity": "1/2 cup", "category": "dairy" },
+          { "item": "Butter", "quantity": "4 tbsp", "category": "fat" },
+          { "item": "Onion", "quantity": "1 large diced", "category": "aromatic" },
+          { "item": "Cumin", "quantity": "1 tsp", "category": "spice" },
+          { "item": "Coriander", "quantity": "1 tsp", "category": "spice" },
+          { "item": "Paprika", "quantity": "1 tsp", "category": "spice" },
+          { "item": "Cilantro", "quantity": "for garnish", "category": "herb" }
+        ],
+        "instructions": [
+          "Marinate chicken in yogurt, lemon juice, half the garam masala, and ginger-garlic paste for 4+ hours.",
+          "Heat 2 tbsp butter in large pan, cook marinated chicken until just done. Set aside.",
+          "In same pan, sauté onions until golden brown.",
+          "Add remaining spices, cook 1 minute until fragrant.",
+          "Add crushed tomatoes, simmer 15 minutes until thick.",
+          "Blend sauce until smooth, return to pan.",
+          "Stir in cream and remaining butter.",
+          "Add chicken back to sauce, simmer 10 minutes.",
+          "Garnish with cilantro and serve with basmati rice or naan."
+        ],
+        "tips": [
+          "Don't overcook chicken in first step - it finishes in the sauce",
+          "Blend sauce smooth for restaurant-style texture",
+          "Adjust cream and spices to taste preference"
+        ]
+      },
+      {
+        "id": "biryani",
+        "name": "Chicken Biryani",
+        "description": "Fragrant layered rice dish with spiced chicken, saffron, and aromatic basmati rice.",
+        "emoji": "🍚",
+        "difficulty": "Hard",
+        "prep_time": "1 hour",
+        "cook_time": "1 hour",
+        "servings": 8,
+        "dietary_tags": ["gluten-free"],
+        "ingredients": [
+          { "item": "Basmati rice", "quantity": "3 cups", "category": "grain" },
+          { "item": "Chicken", "quantity": "1 kg cut in pieces", "category": "protein" },
+          { "item": "Saffron", "quantity": "1/2 tsp", "category": "spice" },
+          { "item": "Warm milk", "quantity": "1/4 cup", "category": "dairy" },
+          { "item": "Fried onions", "quantity": "1 cup", "category": "garnish" },
+          { "item": "Yogurt", "quantity": "1 cup", "category": "dairy" },
+          { "item": "Ginger-garlic paste", "quantity": "2 tbsp", "category": "aromatic" },
+          { "item": "Red chili powder", "quantity": "1 tsp", "category": "spice" },
+          { "item": "Turmeric", "quantity": "1/2 tsp", "category": "spice" },
+          { "item": "Garam masala", "quantity": "2 tsp", "category": "spice" },
+          { "item": "Mint leaves", "quantity": "1/2 cup", "category": "herb" },
+          { "item": "Cilantro", "quantity": "1/2 cup", "category": "herb" },
+          { "item": "Ghee", "quantity": "4 tbsp", "category": "fat" }
+        ],
+        "instructions": [
+          "Soak saffron in warm milk. Soak rice for 30 minutes.",
+          "Marinate chicken with yogurt, ginger-garlic paste, and spices for 1 hour.",
+          "Cook rice in salted water until 70% done, drain.",
+          "Cook marinated chicken until tender, about 25 minutes.",
+          "In heavy-bottomed pot, layer half the rice.",
+          "Add chicken and its gravy, sprinkle with mint and cilantro.",
+          "Top with remaining rice, saffron milk, fried onions, and ghee.",
+          "Cover with foil, then tight lid. Cook on high 3 minutes, then low 45 minutes.",
+          "Let rest 10 minutes before opening. Gently mix and serve."
+        ],
+        "tips": [
+          "Dum cooking (slow steaming) is crucial for authentic flavor",
+          "Don't fully cook rice initially - it finishes during dum",
+          "Layer carefully to create distinct strata"
+        ]
+      }
+    ]
+  }
+}

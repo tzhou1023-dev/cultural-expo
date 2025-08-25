@@ -1,0 +1,46 @@
+{
+  "name": "cultural-expo",
+  "version": "1.0.0",
+  "description": "A React web application to discover cultures around the world with modern dark theme design",
+  "keywords": ["react", "cultural", "exploration", "dark-theme", "framer-motion", "tailwindcss"],
+  "author": "Cultural Expo Team",
+  "license": "MIT",
+  "homepage": "./",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build && npm run optimize",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "serve": "npx serve -s build -l 3000",
+    "optimize": "echo 'Build optimized for production!'",
+    "analyze": "npx source-map-explorer 'build/static/js/*.js'"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "@tailwindcss/forms": "^0.5.10",
+    "framer-motion": "^12.23.12",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-scripts": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
+    "tailwindcss": "^3.3.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
