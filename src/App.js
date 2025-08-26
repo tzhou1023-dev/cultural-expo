@@ -432,15 +432,15 @@ const AppContent = () => {
               
               {showSections && (
                 <motion.div 
-                  className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12"
+                  className="space-y-12 mt-12"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3, duration: 0.6 }}
                 >
                   {[
                     <FoodSection key="food" selectedCountry={selectedCountry} />,
-                    <DrinkSection key="drinks" country={selectedCountry} />,
-                    <MovieSection key="movies" country={selectedCountry} />
+                    <DrinkSection key="drinks" selectedCountry={selectedCountry} />,
+                    <MovieSection key="movies" selectedCountry={selectedCountry} />
                   ].map((component, index) => (
                     <motion.div
                       key={component.key}

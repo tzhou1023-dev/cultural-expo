@@ -106,7 +106,7 @@ const FoodSection = ({ selectedCountry }) => {
         <h2 className="text-4xl font-bold mb-3 text-white">
           {selectedCountry.flag} {selectedCountry.name} Cuisine
         </h2>
-        <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-lg text-gray-300 max-w-4xl mx-auto leading-relaxed">
           {selectedCountry.cuisine_description}
         </p>
       </div>
@@ -131,8 +131,8 @@ const FoodSection = ({ selectedCountry }) => {
         </div>
       </div>
 
-      {/* Dishes Grid - Improved layout to prevent content cutoff */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+      {/* Dishes - Horizontal Layout - Each card spans full width */}
+      <div className="space-y-6">
         <AnimatePresence>
           {filteredDishes.map((dish, index) => (
             <motion.div
@@ -143,72 +143,78 @@ const FoodSection = ({ selectedCountry }) => {
               transition={{ delay: index * 0.1 }}
               className="bg-gray-800/50 border border-gray-700/50 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:border-gray-600/50 hover:bg-gray-800/70"
             >
-              {/* Dish Header */}
+              {/* Dish Header - Horizontal Layout */}
               <div className="p-8">
-                <div className="flex items-start justify-between mb-6">
-                  <div className="text-5xl">{dish.image}</div>
-                  <div className="flex items-center space-x-3">
-                    <span className={`px-3 py-2 rounded-full text-xs font-medium border ${getDifficultyColor(dish.difficulty)}`}>
-                      <div className="flex items-center space-x-2">
-                        {getDifficultyIcon(dish.difficulty)}
-                        <span>{dish.difficulty}</span>
+                <div className="flex items-start space-x-8">
+                  {/* Left Side - Image and Basic Info */}
+                  <div className="flex-shrink-0">
+                    <div className="text-6xl mb-4">{dish.image}</div>
+                    <div className="flex items-center space-x-3 mb-4">
+                      <span className={`px-3 py-2 rounded-full text-xs font-medium border ${getDifficultyColor(dish.difficulty)}`}>
+                        <div className="flex items-center space-x-2">
+                          {getDifficultyIcon(dish.difficulty)}
+                          <span>{dish.difficulty}</span>
+                        </div>
+                      </span>
+                      {isCooked(dish.id) && (
+                        <button
+                          onClick={() => markAsNotCooked(dish.id)}
+                          className="text-green-400 hover:text-green-300 transition-colors p-2 rounded-full hover:bg-green-900/20"
+                          title="Mark as not cooked"
+                          aria-label="Remove from cooked dishes"
+                        >
+                          <Star className="w-5 h-5 fill-current" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Right Side - Content */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-3xl font-bold mb-4 text-white leading-tight">{dish.name}</h3>
+                    <p className="text-gray-300 mb-6 leading-relaxed text-lg">{dish.description}</p>
+
+                    {/* Time and Difficulty Info */}
+                    <div className="flex items-center space-x-8 text-base text-gray-400 mb-6">
+                      <div className="flex items-center space-x-3">
+                        <Clock className="w-6 h-6 text-blue-400" />
+                        <span>Prep: {formatTime(dish.prep_time)}</span>
                       </div>
-                    </span>
+                      <div className="flex items-center space-x-3">
+                        <Clock3 className="w-6 h-6 text-purple-400" />
+                        <span>Cook: {formatTime(dish.cook_time)}</span>
+                      </div>
+                    </div>
+
+                    {/* Cooked Status */}
                     {isCooked(dish.id) && (
-                      <button
-                        onClick={() => markAsNotCooked(dish.id)}
-                        className="text-green-400 hover:text-green-300 transition-colors p-2 rounded-full hover:bg-green-900/20"
-                        title="Mark as not cooked"
-                        aria-label="Remove from cooked dishes"
-                      >
-                        <Star className="w-5 h-5 fill-current" />
-                      </button>
+                      <div className="flex items-center space-x-3 text-base text-green-400 mb-6 p-4 bg-green-900/20 rounded-xl border border-green-500/30">
+                        <Calendar className="w-5 h-5" />
+                        <span>Cooked on {getCookedDate(dish.id).toLocaleDateString()}</span>
+                      </div>
                     )}
-                  </div>
-                </div>
 
-                <h3 className="text-2xl font-bold mb-3 text-white leading-tight">{dish.name}</h3>
-                <p className="text-gray-300 mb-6 leading-relaxed text-base">{dish.description}</p>
-
-                {/* Time and Difficulty Info */}
-                <div className="flex items-center space-x-6 text-sm text-gray-400 mb-6">
-                  <div className="flex items-center space-x-2">
-                    <Clock className="w-5 h-5 text-blue-400" />
-                    <span>Prep: {formatTime(dish.prep_time)}</span>
+                    {/* Action Buttons */}
+                    <div className="flex space-x-4">
+                      <button
+                        onClick={() => setExpandedRecipe(expandedRecipe === dish.id ? null : dish.id)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-8 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 text-lg"
+                        aria-label={expandedRecipe === dish.id ? 'Hide recipe details' : 'Show recipe details'}
+                      >
+                        {expandedRecipe === dish.id ? 'Hide Recipe' : 'Show Recipe'}
+                      </button>
+                      {!isCooked(dish.id) && (
+                        <button
+                          onClick={() => markAsCooked(dish.id)}
+                          className="bg-gray-700 hover:bg-gray-600 text-gray-200 font-medium py-4 px-6 rounded-xl transition-all duration-200 hover:shadow-lg focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 text-lg"
+                          title="Mark as cooked"
+                          aria-label="Mark dish as cooked"
+                        >
+                          <Star className="w-6 h-6" />
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Clock3 className="w-5 h-5 text-purple-400" />
-                    <span>Cook: {formatTime(dish.cook_time)}</span>
-                  </div>
-                </div>
-
-                {/* Cooked Status */}
-                {isCooked(dish.id) && (
-                  <div className="flex items-center space-x-2 text-sm text-green-400 mb-6 p-3 bg-green-900/20 rounded-lg border border-green-500/30">
-                    <Calendar className="w-4 h-4" />
-                    <span>Cooked on {getCookedDate(dish.id).toLocaleDateString()}</span>
-                  </div>
-                )}
-
-                {/* Action Buttons */}
-                <div className="flex space-x-3">
-                  <button
-                    onClick={() => setExpandedRecipe(expandedRecipe === dish.id ? null : dish.id)}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900"
-                    aria-label={expandedRecipe === dish.id ? 'Hide recipe details' : 'Show recipe details'}
-                  >
-                    {expandedRecipe === dish.id ? 'Hide Recipe' : 'Show Recipe'}
-                  </button>
-                  {!isCooked(dish.id) && (
-                    <button
-                      onClick={() => markAsCooked(dish.id)}
-                      className="bg-gray-700 hover:bg-gray-600 text-gray-200 font-medium py-3 px-4 rounded-xl transition-all duration-200 hover:shadow-lg focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900"
-                      title="Mark as cooked"
-                      aria-label="Mark dish as cooked"
-                    >
-                      <Star className="w-5 h-5" />
-                    </button>
-                  )}
                 </div>
               </div>
 
@@ -223,49 +229,52 @@ const FoodSection = ({ selectedCountry }) => {
                     className="border-t border-gray-700/50 overflow-hidden"
                   >
                     <div className="p-8 space-y-8">
-                      {/* Ingredients */}
-                      <div>
-                        <h4 className="text-xl font-bold mb-4 flex items-center space-x-3 text-white">
-                          <Utensils className="w-6 h-6 text-blue-400" />
-                          <span>Ingredients</span>
-                        </h4>
-                        <ul className="space-y-3">
-                          {dish.ingredients.map((ingredient, idx) => (
-                            <li key={idx} className="flex items-center space-x-4 p-3 bg-gray-700/30 rounded-lg border border-gray-600/30">
-                              <div className="w-3 h-3 bg-blue-500 rounded-full flex-shrink-0"></div>
-                              <span className="font-semibold text-blue-300 min-w-0">{ingredient.quantity} {ingredient.unit}</span>
-                              <span className="text-gray-300 flex-1">{ingredient.item}</span>
-                            </li>
-                          ))}
-                        </ul>
+                      {/* Ingredients and Instructions in Grid */}
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {/* Ingredients */}
+                        <div>
+                          <h4 className="text-2xl font-bold mb-6 flex items-center space-x-3 text-white">
+                            <Utensils className="w-7 h-7 text-blue-400" />
+                            <span>Ingredients</span>
+                          </h4>
+                          <ul className="space-y-3">
+                            {dish.ingredients.map((ingredient, idx) => (
+                              <li key={idx} className="flex items-center space-x-4 p-4 bg-gray-700/30 rounded-xl border border-gray-600/30">
+                                <div className="w-3 h-3 bg-blue-500 rounded-full flex-shrink-0"></div>
+                                <span className="font-semibold text-blue-300 min-w-0">{ingredient.quantity} {ingredient.unit}</span>
+                                <span className="text-gray-300 flex-1 text-lg">{ingredient.item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Instructions */}
+                        <div>
+                          <h4 className="text-2xl font-bold mb-6 flex items-center space-x-3 text-white">
+                            <ChefHat className="w-7 h-7 text-purple-400" />
+                            <span>Instructions</span>
+                          </h4>
+                          <ol className="space-y-4">
+                            {dish.instructions.map((instruction, idx) => (
+                              <li key={idx} className="flex space-x-4 p-4 bg-gray-700/30 rounded-xl border border-gray-600/30">
+                                <span className="flex-shrink-0 w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center text-lg font-bold">
+                                  {idx + 1}
+                                </span>
+                                <span className="text-gray-300 leading-relaxed text-lg">{instruction}</span>
+                              </li>
+                            ))}
+                          </ol>
+                        </div>
                       </div>
 
-                      {/* Instructions */}
-                      <div>
-                        <h4 className="text-xl font-bold mb-4 flex items-center space-x-3 text-white">
-                          <ChefHat className="w-6 h-6 text-purple-400" />
-                          <span>Instructions</span>
-                        </h4>
-                        <ol className="space-y-4">
-                          {dish.instructions.map((instruction, idx) => (
-                            <li key={idx} className="flex space-x-4 p-4 bg-gray-700/30 rounded-lg border border-gray-600/30">
-                              <span className="flex-shrink-0 w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                                {idx + 1}
-                              </span>
-                              <span className="text-gray-300 leading-relaxed text-base">{instruction}</span>
-                            </li>
-                          ))}
-                        </ol>
-                      </div>
-
-                      {/* Tips */}
+                      {/* Tips - Full Width */}
                       {dish.tips && (
-                        <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-6">
-                          <h4 className="text-xl font-bold mb-3 text-blue-300 flex items-center space-x-2">
+                        <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-8">
+                          <h4 className="text-2xl font-bold mb-4 text-blue-300 flex items-center space-x-3">
                             <span>💡</span>
                             <span>Pro Tips</span>
                           </h4>
-                          <p className="text-blue-200 leading-relaxed text-base">{dish.tips}</p>
+                          <p className="text-blue-200 leading-relaxed text-lg">{dish.tips}</p>
                         </div>
                       )}
                     </div>
