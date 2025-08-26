@@ -53,23 +53,41 @@ const movieData = {
   ]
 };
 
-function MovieSection({ country }) {
+function MovieSection({ selectedCountry }) {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    setMovies(movieData[country.id] || []);
-    setSelectedMovie(null);
-  }, [country]);
+    if (selectedCountry && selectedCountry.id) {
+      setMovies(movieData[selectedCountry.id] || []);
+      setSelectedMovie(null);
+    } else {
+      setMovies([]);
+      setSelectedMovie(null);
+    }
+  }, [selectedCountry]);
+
+  // Early return if no country is selected
+  if (!selectedCountry || !selectedCountry.id) {
+    return (
+      <div className="flex items-center justify-center min-h-64">
+        <div className="text-center">
+          <div className="text-6xl mb-4">🎬</div>
+          <h3 className="text-2xl font-bold text-gray-300 mb-2">Cinema & Films</h3>
+          <p className="text-gray-400">Select a country to explore its movie culture</p>
+        </div>
+      </div>
+    );
+  }
 
   const getGenreColor = (genre) => {
-    if (genre.includes('Action')) return 'text-red-600 bg-red-100';
-    if (genre.includes('Comedy')) return 'text-yellow-600 bg-yellow-100';
-    if (genre.includes('Drama')) return 'text-blue-600 bg-blue-100';
-    if (genre.includes('Romance')) return 'text-pink-600 bg-pink-100';
-    if (genre.includes('Animation')) return 'text-purple-600 bg-purple-100';
-    if (genre.includes('Thriller')) return 'text-gray-600 bg-gray-100';
-    return 'text-green-600 bg-green-100';
+    if (genre.includes('Action')) return 'text-red-400 bg-red-900/20 border-red-500/30';
+    if (genre.includes('Comedy')) return 'text-yellow-400 bg-yellow-900/20 border-yellow-500/30';
+    if (genre.includes('Drama')) return 'text-blue-400 bg-blue-900/20 border-blue-500/30';
+    if (genre.includes('Romance')) return 'text-pink-400 bg-pink-900/20 border-pink-500/30';
+    if (genre.includes('Animation')) return 'text-purple-400 bg-purple-900/20 border-purple-500/30';
+    if (genre.includes('Thriller')) return 'text-gray-400 bg-gray-900/20 border-gray-500/30';
+    return 'text-green-400 bg-green-900/20 border-green-500/30';
   };
 
   const getDecadeStyle = (year) => {
@@ -82,38 +100,36 @@ function MovieSection({ country }) {
   };
 
   return (
-    <div className="section-card">
-      <div className="text-center mb-6">
-        <div className="text-4xl mb-3">🎬</div>
-        <h3 className="text-2xl font-bold text-gray-800 mb-2">Cinema & Films</h3>
-        <p className="text-gray-600">Explore {country.name}'s movie culture</p>
+    <div className="bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8">
+      <div className="text-center mb-8">
+        <div className="text-6xl mb-4">🎬</div>
+        <h3 className="text-3xl font-bold text-white mb-3">Cinema & Films</h3>
+        <p className="text-gray-300 text-lg">Explore {selectedCountry.name}'s movie culture</p>
       </div>
 
       <div className="space-y-4">
         {movies.map((movie, index) => (
           <div
             key={movie.name}
-            className={`p-4 rounded-lg border-2 transition-all duration-300 cursor-pointer ${getDecadeStyle(movie.year)} ${
+            className={`p-6 rounded-xl border-2 transition-all duration-300 cursor-pointer ${getDecadeStyle(movie.year)} ${
               selectedMovie === movie.name
-                ? 'border-rich-green bg-green-50 shadow-md'
-                : 'border-gray-200 hover:border-rich-green hover:bg-green-25'
+                ? 'border-green-500 bg-green-900/20 shadow-lg'
+                : 'border-gray-600 hover:border-green-500 hover:bg-gray-700/30'
             }`}
             onClick={() => setSelectedMovie(selectedMovie === movie.name ? null : movie.name)}
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <span className="text-2xl">{movie.emoji}</span>
-                <div>
-                  <h4 className="font-semibold text-gray-800">{movie.name}</h4>
-                  <p className="text-sm text-gray-600">{movie.year} • {movie.director}</p>
+            <div className="flex items-center space-x-4">
+              <div className="text-4xl">{movie.emoji}</div>
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="text-xl font-bold text-white">{movie.name}</h4>
+                  <span className="text-yellow-400 text-lg">{movie.rating}</span>
                 </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getGenreColor(movie.genre)}`}>
+                <p className="text-gray-300 mb-3">
+                  <span className="font-medium">{movie.year}</span> • {movie.director}
+                </p>
+                <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getGenreColor(movie.genre)}`}>
                   {movie.genre}
-                </span>
-                <span className="text-gray-400">
-                  {selectedMovie === movie.name ? '▼' : '▶'}
                 </span>
               </div>
             </div>
@@ -134,7 +150,7 @@ function MovieSection({ country }) {
                   <div className="mb-3">
                     <h5 className="font-semibold text-gray-800 text-sm mb-1">Cultural Impact</h5>
                     <p className="text-sm text-gray-600">
-                      This film represents important aspects of {country.name}'s culture, 
+                      This film represents important aspects of {selectedCountry.name}'s culture, 
                       storytelling traditions, and cinematic heritage.
                     </p>
                   </div>
@@ -149,9 +165,8 @@ function MovieSection({ country }) {
       </div>
 
       {movies.length === 0 && (
-        <div className="text-center py-8 text-gray-500">
-          <div className="text-4xl mb-3">🔍</div>
-          <p>Movie data for {country.name} coming soon!</p>
+        <div className="text-center py-8">
+          <p className="text-gray-400">No movie information available for this country.</p>
         </div>
       )}
     </div>

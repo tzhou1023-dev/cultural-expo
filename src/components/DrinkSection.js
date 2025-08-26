@@ -53,24 +53,42 @@ const drinkData = {
   ]
 };
 
-function DrinkSection({ country }) {
+function DrinkSection({ selectedCountry }) {
   const [selectedDrink, setSelectedDrink] = useState(null);
   const [drinks, setDrinks] = useState([]);
 
   useEffect(() => {
-    setDrinks(drinkData[country.id] || []);
-    setSelectedDrink(null);
-  }, [country]);
+    if (selectedCountry && selectedCountry.id) {
+      setDrinks(drinkData[selectedCountry.id] || []);
+      setSelectedDrink(null);
+    } else {
+      setDrinks([]);
+      setSelectedDrink(null);
+    }
+  }, [selectedCountry]);
+
+  // Early return if no country is selected
+  if (!selectedCountry || !selectedCountry.id) {
+    return (
+      <div className="flex items-center justify-center min-h-64">
+        <div className="text-center">
+          <div className="text-6xl mb-4">🍹</div>
+          <h3 className="text-2xl font-bold text-gray-300 mb-2">Popular Drinks</h3>
+          <p className="text-gray-400">Select a country to explore its beverages</p>
+        </div>
+      </div>
+    );
+  }
 
   const getTypeColor = (type) => {
     switch (type) {
-      case 'Alcoholic': return 'text-red-600 bg-red-100';
-      case 'Coffee': case 'Iced Coffee': return 'text-amber-600 bg-amber-100';
-      case 'Hot Tea': case 'Iced Tea': case 'Herbal Tea': return 'text-green-600 bg-green-100';
-      case 'Cocktail': return 'text-purple-600 bg-purple-100';
-      case 'Juice': return 'text-orange-600 bg-orange-100';
-      case 'Soft Drink': return 'text-blue-600 bg-blue-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'Alcoholic': return 'text-red-400 bg-red-900/20 border-red-500/30';
+      case 'Coffee': case 'Iced Coffee': return 'text-amber-400 bg-amber-900/20 border-amber-500/30';
+      case 'Hot Tea': case 'Iced Tea': case 'Herbal Tea': return 'text-green-400 bg-green-900/20 border-green-500/30';
+      case 'Cocktail': return 'text-purple-400 bg-purple-900/20 border-purple-500/30';
+      case 'Juice': return 'text-orange-400 bg-orange-900/20 border-orange-500/30';
+      case 'Soft Drink': return 'text-blue-400 bg-blue-900/20 border-blue-500/30';
+      default: return 'text-gray-400 bg-gray-900/20 border-gray-500/30';
     }
   };
 
@@ -81,76 +99,47 @@ function DrinkSection({ country }) {
   };
 
   return (
-    <div className="section-card">
-      <div className="text-center mb-6">
-        <div className="text-4xl mb-3">🍹</div>
-        <h3 className="text-2xl font-bold text-gray-800 mb-2">Popular Drinks</h3>
-        <p className="text-gray-600">Taste {country.name}'s beverages</p>
+    <div className="bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8">
+      <div className="text-center mb-8">
+        <div className="text-6xl mb-4">🍹</div>
+        <h3 className="text-3xl font-bold text-white mb-3">Popular Drinks</h3>
+        <p className="text-gray-300 text-lg">Taste {selectedCountry.name}'s beverages</p>
       </div>
 
       <div className="space-y-4">
         {drinks.map((drink, index) => (
           <div
             key={drink.name}
-            className={`p-4 rounded-lg border-2 transition-all duration-300 cursor-pointer ${
+            className={`p-6 rounded-xl border-2 transition-all duration-300 cursor-pointer ${
               selectedDrink === drink.name
-                ? 'border-deep-blue bg-blue-50 shadow-md'
-                : 'border-gray-200 hover:border-deep-blue hover:bg-blue-25'
+                ? 'border-blue-500 bg-blue-900/20 shadow-lg'
+                : 'border-gray-600 hover:border-blue-500 hover:bg-gray-700/30'
             }`}
             onClick={() => setSelectedDrink(selectedDrink === drink.name ? null : drink.name)}
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <span className="text-2xl">{drink.emoji}</span>
-                <div>
-                  <h4 className="font-semibold text-gray-800">{drink.name}</h4>
-                  <p className="text-sm text-gray-600">{drink.description}</p>
+            <div className="flex items-center space-x-4">
+              <div className="text-4xl">{drink.emoji}</div>
+              <div className="flex-1">
+                <h4 className="text-xl font-bold text-white mb-2">{drink.name}</h4>
+                <p className="text-gray-300 mb-3">{drink.description}</p>
+                <div className="flex items-center space-x-3">
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getTypeColor(drink.type)}`}>
+                    {drink.type}
+                  </span>
+                  <span className="text-gray-400 flex items-center space-x-2">
+                    <span>{getTemperatureIcon(drink.temperature)}</span>
+                    <span>{drink.temperature}</span>
+                  </span>
                 </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(drink.type)}`}>
-                  {drink.type}
-                </span>
-                <span className="text-gray-400">
-                  {selectedDrink === drink.name ? '▼' : '▶'}
-                </span>
               </div>
             </div>
-            
-            {selectedDrink === drink.name && (
-              <div className="mt-4 pt-4 border-t border-blue-200 animate-fade-in">
-                <div className="bg-white p-4 rounded-lg">
-                  <div className="grid grid-cols-2 gap-4 mb-3">
-                    <div>
-                      <h5 className="font-semibold text-gray-800 text-sm mb-1">Serving Temperature</h5>
-                      <div className="flex items-center space-x-1">
-                        <span>{getTemperatureIcon(drink.temperature)}</span>
-                        <span className="text-sm text-gray-600">{drink.temperature}</span>
-                      </div>
-                    </div>
-                    <div>
-                      <h5 className="font-semibold text-gray-800 text-sm mb-1">Best Time</h5>
-                      <span className="text-sm text-gray-600">
-                        {drink.type === 'Coffee' || drink.type === 'Hot Tea' ? 'Morning' :
-                         drink.type === 'Alcoholic' || drink.type === 'Cocktail' ? 'Evening' :
-                         'Anytime'}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    🍃 Cultural Note: This drink is an integral part of {country.name}'s social traditions
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         ))}
       </div>
 
       {drinks.length === 0 && (
-        <div className="text-center py-8 text-gray-500">
-          <div className="text-4xl mb-3">🔍</div>
-          <p>Drink data for {country.name} coming soon!</p>
+        <div className="text-center py-8">
+          <p className="text-gray-400">No drink information available for this country.</p>
         </div>
       )}
     </div>
