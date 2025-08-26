@@ -860,3 +860,130 @@ input, textarea, select, button {
   color: var(--text-primary) !important;
   border-color: var(--border-primary) !important;
 }
+
+/* Country Page Specific Utilities */
+@layer utilities {
+  /* High contrast color combinations for accessibility */
+  .text-high-contrast {
+    color: #FFFFFF !important; /* Pure white for maximum contrast */
+  }
+  
+  .text-medium-contrast {
+    color: #E5E7EB !important; /* Light gray for good contrast */
+  }
+  
+  .text-low-contrast {
+    color: #9CA3AF !important; /* Medium gray for secondary text */
+  }
+  
+  /* Accessible background colors with proper contrast */
+  .bg-card-elevated {
+    background-color: rgba(31, 41, 55, 0.4) !important; /* Dark gray with transparency */
+    backdrop-filter: blur(12px);
+  }
+  
+  .bg-card-hover {
+    background-color: rgba(31, 41, 55, 0.6) !important; /* Darker on hover */
+    backdrop-filter: blur(16px);
+  }
+  
+  /* Accessible border colors */
+  .border-accessible {
+    border-color: rgba(75, 85, 99, 0.5) !important; /* Medium gray with transparency */
+  }
+  
+  .border-accessible-hover {
+    border-color: rgba(75, 85, 99, 0.7) !important; /* Darker on hover */
+  }
+  
+  /* Focus ring utilities for accessibility */
+  .focus-ring-accessible {
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5), 0 0 0 4px rgba(0, 0, 0, 0.9) !important;
+  }
+  
+  .focus-ring-accessible:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5), 0 0 0 4px rgba(0, 0, 0, 0.9) !important;
+  }
+  
+  /* Glassmorphism effects with accessibility */
+  .glass-accessible {
+    background: rgba(31, 41, 55, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+  }
+  
+  .glass-accessible-hover {
+    background: rgba(31, 41, 55, 0.6);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(75, 85, 99, 0.5);
+  }
+  
+  /* Semantic color utilities for different content types */
+  .text-info {
+    color: #60A5FA !important; /* Blue for information */
+  }
+  
+  .text-success {
+    color: #34D399 !important; /* Green for success */
+  }
+  
+  .text-warning {
+    color: #FBBF24 !important; /* Yellow for warnings */
+  }
+  
+  .text-error {
+    color: #F87171 !important; /* Red for errors */
+  }
+  
+  /* Background colors for semantic meaning */
+  .bg-info {
+    background-color: rgba(96, 165, 250, 0.2) !important;
+  }
+  
+  .bg-success {
+    background-color: rgba(52, 211, 153, 0.2) !important;
+  }
+  
+  .bg-warning {
+    background-color: rgba(251, 191, 36, 0.2) !important;
+  }
+  
+  .bg-error {
+    background-color: rgba(248, 113, 113, 0.2) !important;
+  }
+  
+  /* Animation utilities for accessibility */
+  .animate-gentle {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .animate-gentle:hover {
+    transform: translateY(-2px);
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-gentle,
+    .animate-gentle:hover {
+      transition: none;
+      transform: none;
+    }
+  }
+  
+  /* High contrast mode enhancements */
+  @media (prefers-contrast: high) {
+    .glass-accessible {
+      background: rgba(31, 41, 55, 0.9) !important;
+      border-width: 2px !important;
+    }
+    
+    .border-accessible {
+      border-width: 2px !important;
+    }
+    
+    .focus-ring-accessible:focus {
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.8) !important;
+    }
+  }
+}
