@@ -18,7 +18,7 @@ import MovieSection from './components/MovieSection';
 
 import CulturalCalendar from './components/CulturalCalendar';
 import ExperienceEntry from './components/ExperienceEntry';
-import ProgressDashboard from './components/ProgressDashboard';
+import { getAllExperiences } from './utils/experienceManager';
 
 // Main App Component
 const AppContent = () => {
@@ -26,7 +26,6 @@ const AppContent = () => {
   const [showSections, setShowSections] = useState(false);
 
   const [showExperienceEntry, setShowExperienceEntry] = useState(false);
-  const [showProgressDashboard, setShowProgressDashboard] = useState(false);
   const [editingExperienceId, setEditingExperienceId] = useState(null);
   const [initialDate, setInitialDate] = useState(null);
   const [viewMode, setViewMode] = useState('calendar'); // 'calendar' or 'country'
@@ -76,10 +75,6 @@ const AppContent = () => {
           setShowSections(false);
         }
         break;
-
-      case 'progress-dashboard':
-        setShowProgressDashboard(true);
-        break;
       case 'open-command-palette':
         commandPalette.open();
         break;
@@ -102,101 +97,55 @@ const AppContent = () => {
     announce('Opening experience editor.');
   };
 
-  const handleExperienceEntryClose = (saved) => {
-    setShowExperienceEntry(false);
-    setEditingExperienceId(null);
-    setInitialDate(null);
-    if (saved) {
-      announce('Experience saved successfully.');
-      toast.success('Experience saved to your journey! ✨');
-    } else {
-      announce('Experience entry cancelled.');
-    }
-  };
-
-  // Global keyboard shortcuts
-  useEffect(() => {
-    const handleGlobalKeyDown = (e) => {
-      // Only handle shortcuts when no input is focused
-      if (document.activeElement?.tagName === 'INPUT' || 
-          document.activeElement?.tagName === 'TEXTAREA') {
-        return;
-      }
-
-      switch (e.key) {
-        case 'n':
-          if (e.metaKey || e.ctrlKey) {
-            e.preventDefault();
-            handleAddExperience();
-          }
-          break;
-        case 'h':
-          if (e.metaKey || e.ctrlKey) {
-            e.preventDefault();
-            resetSelection();
-          }
-          break;
-        case '/':
-          e.preventDefault();
-          commandPalette.open();
-          break;
-        default:
-          break;
-      }
-    };
-
-    document.addEventListener('keydown', handleGlobalKeyDown);
-    return () => document.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [commandPalette]);
-
-  const handleDateSelect = (date, experiences) => {
+  const handleDateSelect = (dateString, experiences) => {
     if (experiences.length > 0) {
+      // If there are experiences on this date, allow editing the first one
       handleEditExperience(experiences[0].id);
     } else {
-      handleAddExperience(date);
+      // If no experiences, allow adding a new one
+      handleAddExperience(dateString);
     }
   };
 
-  // Animation variants
+  // Get journey progress data
+  const getJourneyProgress = () => {
+    const experiences = getAllExperiences();
+    const totalExperiences = experiences.length;
+    const uniqueCountries = new Set(experiences.map(exp => exp.country.id)).size;
+    const totalCountries = 50; // Total countries in our database
+    const progressPercentage = Math.round((uniqueCountries / totalCountries) * 100);
+    
+    return {
+      totalExperiences,
+      uniqueCountries,
+      totalCountries,
+      progressPercentage
+    };
+  };
+
+  const journeyProgress = getJourneyProgress();
+
+  // Page transition variants
   const pageVariants = {
-    initial: { opacity: 0, y: 20 },
-    in: { opacity: 1, y: 0 },
-    out: { opacity: 0, y: -20 }
+    initial: { opacity: 0, x: -20 },
+    in: { opacity: 1, x: 0 },
+    out: { opacity: 0, x: 20 }
   };
 
   const pageTransition = {
-    type: "tween",
-    ease: "anticipate",
+    type: 'tween',
+    ease: 'anticipate',
     duration: 0.4
   };
 
   return (
-    <div className="min-h-screen bg-dark-primary">
-      {/* Skip Links for Accessibility */}
-      <a 
-        href="#main-content" 
-        className="skip-link"
-        onFocus={(e) => e.target.style.top = '1.5rem'}
-        onBlur={(e) => e.target.style.top = '-10rem'}
-      >
-        Skip to main content
-      </a>
-      <a 
-        href="#navigation" 
-        className="skip-link"
-        style={{ left: '160px' }}
-        onFocus={(e) => e.target.style.top = '1.5rem'}
-        onBlur={(e) => e.target.style.top = '-10rem'}
-      >
-        Skip to navigation
-      </a>
-
-      {/* Live Region for Screen Reader Announcements */}
+    <div className="min-h-screen bg-dark-primary text-text-primary">
+      {/* Live region for accessibility announcements */}
       <div 
-        className="sr-live" 
+        className="sr-only" 
         aria-live="polite" 
         aria-atomic="true"
-        id="announcements"
+        role="status"
       >
         {announcements}
       </div>
@@ -248,20 +197,6 @@ const AppContent = () => {
               aria-label="Primary navigation"
               id="navigation"
             >
-
-
-              <motion.button
-                onClick={() => setShowProgressDashboard(true)}
-                className="btn btn-ghost btn-icon group"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                aria-label="View progress dashboard"
-                title="Progress Dashboard"
-              >
-                <ChartBarIcon className="w-5 h-5 group-hover:text-brand-primary transition-colors" aria-hidden="true" />
-                <span className="hidden sm:inline ml-2 text-sm">Progress</span>
-              </motion.button>
-
               <motion.button
                 onClick={commandPalette.open}
                 className="btn btn-ghost btn-icon group"
@@ -358,6 +293,59 @@ const AppContent = () => {
                   Track your cultural experiences and discover new traditions through our interactive calendar
                 </p>
               </motion.div>
+
+              {/* Journey Progress Section - Concise and Focused on Countries */}
+              <motion.div
+                className="max-w-4xl mx-auto mb-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+              >
+                <div className="bg-gray-800/40 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
+                  <div className="text-center mb-6">
+                    <h3 className="text-2xl font-bold text-white mb-2">Journey Progress</h3>
+                    <p className="text-gray-300">Tracking your cultural exploration across the world</p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-blue-400 mb-2">{journeyProgress.totalExperiences}</div>
+                      <div className="text-gray-400 text-sm">Total Experiences</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-green-400 mb-2">{journeyProgress.uniqueCountries}</div>
+                      <div className="text-gray-400 text-sm">Countries Explored</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-purple-400 mb-2">{journeyProgress.progressPercentage}%</div>
+                      <div className="text-gray-400 text-sm">World Coverage</div>
+                    </div>
+                  </div>
+                  
+                  {/* Progress Bar */}
+                  <div className="mb-4">
+                    <div className="flex justify-between text-sm text-gray-400 mb-2">
+                      <span>Progress</span>
+                      <span>{journeyProgress.uniqueCountries} of {journeyProgress.totalCountries} countries</span>
+                    </div>
+                    <div className="w-full bg-gray-700/50 rounded-full h-3">
+                      <motion.div
+                        className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${journeyProgress.progressPercentage}%` }}
+                        transition={{ duration: 1, delay: 0.5 }}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="text-center">
+                    <p className="text-gray-400 text-sm">
+                      🌍 Keep exploring to discover more cultures and traditions!
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -449,8 +437,7 @@ const AppContent = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ 
                         delay: 0.4 + (index * 0.1), 
-                        duration: 0.6,
-                        ease: "easeOut"
+                        duration: 0.6 
                       }}
                     >
                       {component}
@@ -463,94 +450,13 @@ const AppContent = () => {
         </AnimatePresence>
       </main>
 
-      {/* Modern Footer */}
-      <motion.footer 
-        className="bg-dark-secondary border-t border-dark-border py-12 mt-16"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.6 }}
-      >
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <motion.div 
-              className="flex items-center justify-center space-x-2 mb-4"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
-            >
-              <GlobeAltIcon className="w-6 h-6 text-brand-primary" />
-              <span className="text-text-primary font-semibold">Cultural Expo</span>
-            </motion.div>
-            <p className="text-text-secondary mb-2">
-              Bringing the world closer, one culture at a time
-            </p>
-            <div className="flex items-center justify-center space-x-4 text-text-tertiary text-sm">
-              <span>Explore</span>
-              <span>•</span>
-              <span>Learn</span>
-              <span>•</span>
-              <span>Connect</span>
-            </div>
-            <motion.div 
-              className="mt-6 flex justify-center space-x-1"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2, duration: 0.6 }}
-            >
-              {[...Array(5)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="w-2 h-2 bg-brand-primary rounded-full"
-                  animate={{ 
-                    scale: [1, 1.2, 1],
-                    opacity: [0.5, 1, 0.5]
-                  }}
-                  transition={{
-                    duration: 2,
-                    delay: i * 0.2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                />
-              ))}
-            </motion.div>
-          </div>
-        </div>
-      </motion.footer>
-
-      {/* Enhanced Modals */}
-      <AnimatePresence>
-
-        
-        {showExperienceEntry && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <ExperienceEntry
-              isOpen={showExperienceEntry}
-              onClose={handleExperienceEntryClose}
-              experienceId={editingExperienceId}
-              initialDate={initialDate}
-            />
-          </motion.div>
-        )}
-        
-        {showProgressDashboard && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <ProgressDashboard
-              isOpen={showProgressDashboard}
-              onClose={() => setShowProgressDashboard(false)}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Experience Entry Modal */}
+      <ExperienceEntry
+        isOpen={showExperienceEntry}
+        onClose={() => setShowExperienceEntry(false)}
+        experienceId={editingExperienceId}
+        initialDate={initialDate}
+      />
 
       {/* Command Palette */}
       <CommandPalette
@@ -562,13 +468,13 @@ const AppContent = () => {
   );
 };
 
-// Main App Component with Providers
-function App() {
+// App wrapper with providers
+const App = () => {
   return (
     <ToastProvider>
       <AppContent />
     </ToastProvider>
   );
-}
+};
 
 export default App;

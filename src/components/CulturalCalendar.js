@@ -102,81 +102,43 @@ function CulturalCalendar({ onDateSelect, onAddExperience, onEditExperience }) {
       contextMenu.appendChild(menuItem);
     });
 
-    // Remove menu when clicking elsewhere
-    const removeMenu = () => {
+    // Add context menu to page
+    document.body.appendChild(contextMenu);
+    
+    // Remove context menu when clicking elsewhere
+    const removeContextMenu = () => {
       if (document.body.contains(contextMenu)) {
         document.body.removeChild(contextMenu);
       }
-      document.removeEventListener('click', removeMenu);
+      document.removeEventListener('click', removeContextMenu);
     };
-
-    document.addEventListener('click', removeMenu);
-    document.body.appendChild(contextMenu);
-  }, [calendarData, year, month, onAddExperience, onEditExperience]);
+    
+    setTimeout(() => {
+      document.addEventListener('click', removeContextMenu);
+    }, 100);
+  }, [year, month, calendarData, onAddExperience, onEditExperience]);
 
   // Handle delete experience
   const handleDeleteExperience = (experienceId) => {
-    if (window.confirm('Are you sure you want to delete this cultural experience?')) {
+    if (window.confirm('Are you sure you want to delete this experience?')) {
       deleteExperience(experienceId);
-      // Refresh calendar data
+      // Reload data
       const data = getCalendarData(year, month);
       setCalendarData(data);
       setExperiences(getAllExperiences());
     }
   };
 
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (!selectedDate) return;
-
-      switch (e.key) {
-        case 'ArrowLeft':
-          e.preventDefault();
-          if (selectedDate > 1) {
-            handleDateClick(selectedDate - 1);
-          }
-          break;
-        case 'ArrowRight':
-          e.preventDefault();
-          if (selectedDate < daysInMonth) {
-            handleDateClick(selectedDate + 1);
-          }
-          break;
-        case 'ArrowUp':
-          e.preventDefault();
-          if (selectedDate > 7) {
-            handleDateClick(selectedDate - 7);
-          }
-          break;
-        case 'ArrowDown':
-          e.preventDefault();
-          if (selectedDate <= daysInMonth - 7) {
-            handleDateClick(selectedDate + 7);
-          }
-          break;
-        case 'Enter':
-          e.preventDefault();
-          const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(selectedDate).padStart(2, '0')}`;
-          onAddExperience && onAddExperience(dateString);
-          break;
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [selectedDate, daysInMonth, onAddExperience, year, month]);
-
-  // Generate calendar days
+  // Build calendar days array
   const calendarDays = [];
 
   // Previous month's trailing days
-  for (let i = firstDay - 1; i >= 0; i--) {
-    const day = daysInPrevMonth - i;
+  for (let day = firstDay - 1; day >= 0; day--) {
+    const prevMonthDay = daysInPrevMonth - day;
     calendarDays.push(
       <CalendarDay
-        key={`prev-${day}`}
-        day={day}
+        key={`prev-${prevMonthDay}`}
+        day={prevMonthDay}
         isCurrentMonth={false}
         isToday={false}
         isSelected={false}
@@ -190,11 +152,7 @@ function CulturalCalendar({ onDateSelect, onAddExperience, onEditExperience }) {
 
   // Current month's days
   for (let day = 1; day <= daysInMonth; day++) {
-    const isToday = 
-      year === new Date().getFullYear() && 
-      month === new Date().getMonth() && 
-      day === new Date().getDate();
-    
+    const isToday = day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
     const isSelected = selectedDate === day;
     const dayExperiences = calendarData[day] || [];
 
@@ -233,25 +191,25 @@ function CulturalCalendar({ onDateSelect, onAddExperience, onEditExperience }) {
 
   return (
     <motion.div 
-      className="card overflow-hidden"
+      className="max-w-4xl mx-auto bg-gray-800/40 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      {/* Modern Calendar Header */}
-      <div className="bg-gradient-to-r from-brand-primary to-brand-secondary p-6">
+      {/* Compact Calendar Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4">
         <div className="flex items-center justify-between">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            <h2 className="text-2xl font-bold text-white mb-1">
+            <h2 className="text-xl font-bold text-white mb-1">
               {MONTHS[month]} {year}
             </h2>
             <p className="text-white text-opacity-80 text-sm flex items-center">
               <CalendarIcon className="w-4 h-4 mr-1" />
-              Your Cultural Journey Calendar
+              Cultural Journey Calendar
             </p>
           </motion.div>
           
@@ -292,29 +250,29 @@ function CulturalCalendar({ onDateSelect, onAddExperience, onEditExperience }) {
           </motion.div>
         </div>
 
-        {/* Enhanced Quick Stats */}
+        {/* Compact Quick Stats */}
         <motion.div 
-          className="grid grid-cols-3 gap-4 mt-6"
+          className="grid grid-cols-3 gap-3 mt-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.5 }}
         >
           {[
-            { value: experiences.length, label: "Total Experiences", icon: "🌍" },
-            { value: new Set(experiences.map(exp => exp.country.id)).size, label: "Countries Explored", icon: "🗺️" },
-            { value: Object.keys(calendarData).length, label: "Active Days This Month", icon: "📅" }
+            { value: experiences.length, label: "Experiences", icon: "🌍" },
+            { value: new Set(experiences.map(exp => exp.country.id)).size, label: "Countries", icon: "🗺️" },
+            { value: Object.keys(calendarData).length, label: "Active Days", icon: "📅" }
           ].map((stat, index) => (
             <motion.div 
               key={stat.label}
-              className="text-center bg-white bg-opacity-10 rounded-lg p-3 backdrop-blur-sm"
+              className="text-center bg-white bg-opacity-10 rounded-lg p-2 backdrop-blur-sm"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5 + (index * 0.1), duration: 0.4 }}
               whileHover={{ scale: 1.05 }}
             >
-              <div className="text-xl mb-1">{stat.icon}</div>
+              <div className="text-lg mb-1">{stat.icon}</div>
               <motion.div 
-                className="text-2xl font-bold text-white"
+                className="text-xl font-bold text-white"
                 key={stat.value}
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
@@ -328,12 +286,12 @@ function CulturalCalendar({ onDateSelect, onAddExperience, onEditExperience }) {
         </motion.div>
       </div>
 
-      {/* Calendar Grid */}
-      <div className="p-6">
+      {/* Compact Calendar Grid */}
+      <div className="p-4">
         {/* Weekday Headers */}
         <div className="grid grid-cols-7 gap-1 mb-2">
           {WEEKDAYS.map(day => (
-            <div key={day} className="text-center text-sm font-medium text-gray-500 py-2">
+            <div key={day} className="text-center text-sm font-medium text-gray-400 py-2">
               {day}
             </div>
           ))}
@@ -342,34 +300,6 @@ function CulturalCalendar({ onDateSelect, onAddExperience, onEditExperience }) {
         {/* Calendar Days */}
         <div className="grid grid-cols-7 gap-1">
           {calendarDays}
-        </div>
-      </div>
-
-      {/* Legend */}
-      <div className="px-6 pb-6">
-        <div className="bg-gray-50 rounded-lg p-4">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Legend:</h4>
-          <div className="flex flex-wrap gap-4 text-xs">
-            <div className="flex items-center space-x-1">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <span>Food Experience</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-              <span>Drink Experience</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-              <span>Movie Experience</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-              <span>Notes Available</span>
-            </div>
-          </div>
-          <p className="text-xs text-gray-500 mt-2">
-            💡 Tip: Right-click on any date for quick actions, use arrow keys to navigate
-          </p>
         </div>
       </div>
     </motion.div>
@@ -391,17 +321,17 @@ function CalendarDay({
 
   return (
     <div
-      className={`relative min-h-[80px] p-2 border border-gray-100 cursor-pointer transition-all duration-200 ${
+      className={`relative min-h-[60px] p-1 border border-gray-600/30 cursor-pointer transition-all duration-200 ${
         isCurrentMonth 
-          ? 'hover:bg-gray-50' 
-          : 'text-gray-300 bg-gray-50'
+          ? 'hover:bg-gray-700/30' 
+          : 'text-gray-500 bg-gray-800/20'
       } ${
         isSelected 
-          ? 'bg-warm-orange bg-opacity-20 border-warm-orange' 
+          ? 'bg-blue-600/20 border-blue-500/50' 
           : ''
       } ${
         isToday 
-          ? 'bg-blue-50 border-blue-300 font-bold' 
+          ? 'bg-blue-500/20 border-blue-400 font-bold' 
           : ''
       }`}
       onClick={onClick}
@@ -410,49 +340,21 @@ function CalendarDay({
       onMouseLeave={() => onHover(false)}
     >
       {/* Day Number */}
-      <div className={`text-sm ${isToday ? 'text-blue-600' : 'text-gray-700'}`}>
+      <div className={`text-xs ${isToday ? 'text-blue-300' : 'text-gray-300'}`}>
         {day}
       </div>
 
-      {/* Experience Indicators */}
+      {/* Experience Indicators - Focus on Country Flag */}
       {hasExperiences && (
         <div className="mt-1">
-          {/* Country Flag */}
-          <div className="text-lg mb-1" title={experience.country.name}>
+          {/* Large Country Flag - Main Focus */}
+          <div className="text-2xl mb-1 flex justify-center" title={experience.country.name}>
             {experience.country.flag}
-          </div>
-
-          {/* Activity Dots */}
-          <div className="flex space-x-1">
-            {experience.completedItems.dishes > 0 && (
-              <div 
-                className="w-2 h-2 bg-green-500 rounded-full" 
-                title={`${experience.completedItems.dishes} dishes attempted`}
-              />
-            )}
-            {experience.completedItems.drinks > 0 && (
-              <div 
-                className="w-2 h-2 bg-blue-500 rounded-full" 
-                title={`${experience.completedItems.drinks} drinks tried`}
-              />
-            )}
-            {experience.completedItems.movies > 0 && (
-              <div 
-                className="w-2 h-2 bg-purple-500 rounded-full" 
-                title={`${experience.completedItems.movies} movies watched`}
-              />
-            )}
-            {experience.hasNotes && (
-              <div 
-                className="w-2 h-2 bg-yellow-500 rounded-full" 
-                title="Has notes"
-              />
-            )}
           </div>
 
           {/* Multiple experiences indicator */}
           {experiences.length > 1 && (
-            <div className="absolute top-1 right-1 bg-warm-orange text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+            <div className="absolute top-1 right-1 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
               {experiences.length}
             </div>
           )}

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { XMarkIcon, GlobeAltIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { getAllCountries } from '../utils/countrySelector';
 import { saveExperience, getExperienceById } from '../utils/experienceManager';
-import recipesData from '../data/recipes.json';
 
 function ExperienceEntry({ isOpen, onClose, experienceId = null, initialDate = null }) {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ function ExperienceEntry({ isOpen, onClose, experienceId = null, initialDate = n
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1); // Multi-step form
   const [validationErrors, setValidationErrors] = useState({});
+  const [showOptionalFields, setShowOptionalFields] = useState(false);
 
   useEffect(() => {
     if (experienceId) {
@@ -25,28 +27,10 @@ function ExperienceEntry({ isOpen, onClose, experienceId = null, initialDate = n
       const experience = getExperienceById(experienceId);
       if (experience) {
         setFormData(experience);
+        setShowOptionalFields(true);
       }
     }
   }, [experienceId]);
-
-  useEffect(() => {
-    if (formData.country) {
-      // Load available dishes, drinks, and movies for selected country
-      const countryData = recipesData.recipes[formData.country.id] || [];
-      
-      // Initialize dishes if not already present
-      if (formData.dishes.length === 0) {
-        const dishes = countryData.map(recipe => ({
-          name: recipe.name,
-          attempted: false,
-          rating: 0,
-          notes: '',
-          difficulty: recipe.difficulty
-        }));
-        setFormData(prev => ({ ...prev, dishes }));
-      }
-    }
-  }, [formData.country]);
 
   const filteredCountries = countries.filter(country =>
     country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -104,22 +88,12 @@ function ExperienceEntry({ isOpen, onClose, experienceId = null, initialDate = n
   const validateForm = () => {
     const errors = {};
     
-    if (!formData.date) {
-      errors.date = 'Date is required';
-    }
-    
     if (!formData.country) {
-      errors.country = 'Country selection is required';
+      errors.country = 'Please select a country';
     }
     
-    // Check if at least one activity was attempted/watched
-    const hasActivity = 
-      formData.dishes.some(d => d.attempted) ||
-      formData.drinks.some(d => d.attempted) ||
-      formData.movies.some(m => m.watched);
-    
-    if (!hasActivity) {
-      errors.activities = 'At least one activity must be marked as completed';
+    if (!formData.date) {
+      errors.date = 'Please select a date';
     }
     
     setValidationErrors(errors);
@@ -136,410 +110,450 @@ function ExperienceEntry({ isOpen, onClose, experienceId = null, initialDate = n
     setIsLoading(true);
     
     try {
+      // Prepare experience data - focus on country, make others optional
       const experienceData = {
-        ...formData,
-        ...(experienceId && { id: experienceId })
+        id: experienceId || Date.now().toString(),
+        date: formData.date,
+        country: formData.country,
+        overall_notes: formData.overall_notes,
+        // Only include optional fields if they have content
+        ...(formData.dishes.length > 0 && { dishes: formData.dishes }),
+        ...(formData.drinks.length > 0 && { drinks: formData.drinks }),
+        ...(formData.movies.length > 0 && { movies: formData.movies })
       };
       
-      await saveExperience(experienceData);
-      onClose(true); // Pass true to indicate successful save
+      saveExperience(experienceData);
+      
+      // Reset form
+      setFormData({
+        date: new Date().toISOString().split('T')[0],
+        country: null,
+        dishes: [],
+        drinks: [],
+        movies: [],
+        overall_notes: ''
+      });
+      
+      setStep(1);
+      setShowOptionalFields(false);
+      setValidationErrors({});
+      
+      onClose();
     } catch (error) {
       console.error('Error saving experience:', error);
-      setValidationErrors({ submit: 'Failed to save experience. Please try again.' });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const renderStarRating = (rating, onChange) => {
-    return (
-      <div className="flex space-x-1">
-        {[1, 2, 3, 4, 5].map(star => (
-          <button
-            key={star}
-            type="button"
-            onClick={() => onChange(star)}
-            className={`text-xl transition-colors ${
-              star <= rating ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-200'
-            }`}
-          >
-            ⭐
-          </button>
-        ))}
-      </div>
-    );
+  const resetForm = () => {
+    setFormData({
+      date: initialDate || new Date().toISOString().split('T')[0],
+      country: null,
+      dishes: [],
+      drinks: [],
+      movies: [],
+      overall_notes: ''
+    });
+    setStep(1);
+    setShowOptionalFields(false);
+    setValidationErrors({});
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800">
-              {experienceId ? 'Edit' : 'Add'} Cultural Experience
-            </h2>
-            <p className="text-gray-600">
-              Step {step} of 4 - {
-                step === 1 ? 'Select Country & Date' :
-                step === 2 ? 'Food Experiences' :
-                step === 3 ? 'Drinks & Movies' :
-                'Review & Save'
-              }
-            </p>
-          </div>
-          <button
-            onClick={() => onClose(false)}
-            className="text-gray-400 hover:text-gray-600 text-2xl"
-          >
-            ×
-          </button>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="px-6 pt-4">
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="bg-warm-orange h-2 rounded-full transition-all duration-300"
-              style={{ width: `${(step / 4) * 100}%` }}
-            ></div>
-          </div>
-        </div>
-
-        {/* Form Content */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto">
-          {/* Step 1: Country & Date Selection */}
-          {step === 1 && (
-            <div className="p-6 space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Experience Date
-                </label>
-                <input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-warm-orange focus:border-warm-orange"
-                  max={new Date().toISOString().split('T')[0]}
-                />
-                {validationErrors.date && (
-                  <p className="text-red-500 text-sm mt-1">{validationErrors.date}</p>
-                )}
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        {/* Backdrop */}
+        <motion.div
+          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+        />
+        
+        {/* Modal */}
+        <motion.div
+          className="relative bg-gray-800/90 backdrop-blur-md border border-gray-700/50 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+          initial={{ scale: 0.9, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.9, opacity: 0, y: 20 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b border-gray-700/50">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-blue-600/20 rounded-xl flex items-center justify-center">
+                <GlobeAltIcon className="w-5 h-5 text-blue-400" />
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Search and Select Country
-                </label>
-                <input
-                  type="text"
-                  placeholder="Search countries..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-warm-orange focus:border-warm-orange mb-4"
-                />
-                
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-64 overflow-y-auto">
-                  {filteredCountries.map(country => (
-                    <button
-                      key={country.id}
-                      type="button"
-                      onClick={() => handleCountrySelect(country)}
-                      className={`p-3 rounded-lg border-2 transition-all duration-200 text-center ${
-                        formData.country?.id === country.id
-                          ? 'border-warm-orange bg-orange-50'
-                          : 'border-gray-200 hover:border-warm-orange'
-                      }`}
-                    >
-                      <div className="text-2xl mb-1">{country.flag}</div>
-                      <div className="text-sm font-medium">{country.name}</div>
-                      <div className="text-xs text-gray-500">{country.region}</div>
-                    </button>
-                  ))}
-                </div>
-                
-                {validationErrors.country && (
-                  <p className="text-red-500 text-sm mt-2">{validationErrors.country}</p>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Step 2: Food Experiences */}
-          {step === 2 && formData.country && (
-            <div className="p-6">
-              <div className="mb-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-2">
-                  🍽️ Food Experiences from {formData.country.name}
-                </h3>
-                <p className="text-gray-600">
-                  Mark dishes you've attempted and rate your experience
+                <h2 className="text-xl font-bold text-white">
+                  {experienceId ? 'Edit Cultural Experience' : 'Add Cultural Experience'}
+                </h2>
+                <p className="text-sm text-gray-400">
+                  {experienceId ? 'Update your experience details' : 'Record your cultural journey'}
                 </p>
               </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-white transition-colors"
+              aria-label="Close modal"
+            >
+              <XMarkIcon className="w-6 h-6" />
+            </button>
+          </div>
 
-              <div className="space-y-4">
-                {formData.dishes.map((dish, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-3">
-                        <input
-                          type="checkbox"
-                          checked={dish.attempted}
-                          onChange={(e) => handleDishChange(index, 'attempted', e.target.checked)}
-                          className="w-5 h-5 text-warm-orange focus:ring-warm-orange border-gray-300 rounded"
-                        />
-                        <div>
-                          <h4 className="font-medium text-gray-800">{dish.name}</h4>
-                          {dish.difficulty && (
-                            <span className="text-xs text-gray-500">Difficulty: {dish.difficulty}</span>
-                          )}
-                        </div>
-                      </div>
-                      
-                      {dish.name && !recipesData.recipes[formData.country.id]?.find(r => r.name === dish.name) && (
-                        <button
-                          type="button"
-                          onClick={() => removeItem('dishes', index)}
-                          className="text-red-400 hover:text-red-600"
-                        >
-                          ×
-                        </button>
-                      )}
-                    </div>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+            {/* Step 1: Basic Information */}
+            {step === 1 && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="space-y-6"
+              >
+                {/* Date Selection */}
+                <div>
+                  <label htmlFor="date" className="block text-sm font-medium text-gray-300 mb-2">
+                    Date of Experience *
+                  </label>
+                  <input
+                    type="date"
+                    id="date"
+                    value={formData.date}
+                    onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
+                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent"
+                    required
+                  />
+                  {validationErrors.date && (
+                    <p className="text-red-400 text-sm mt-1">{validationErrors.date}</p>
+                  )}
+                </div>
 
-                    {dish.attempted && (
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-sm text-gray-600 mb-1">Rating</label>
-                          {renderStarRating(dish.rating, (rating) => handleDishChange(index, 'rating', rating))}
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-600 mb-1">Notes</label>
-                          <textarea
-                            value={dish.notes}
-                            onChange={(e) => handleDishChange(index, 'notes', e.target.value)}
-                            placeholder="How was it? Any tips or thoughts?"
-                            className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-                            rows="2"
-                          />
-                        </div>
+                {/* Country Selection */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Country/Region *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Search for a country..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent"
+                    />
+                    {searchTerm && (
+                      <div className="absolute top-full left-0 right-0 mt-1 bg-gray-700/90 backdrop-blur-sm border border-gray-600/50 rounded-xl max-h-60 overflow-y-auto z-10">
+                        {filteredCountries.map(country => (
+                          <button
+                            key={country.id}
+                            type="button"
+                            onClick={() => handleCountrySelect(country)}
+                            className="w-full text-left px-4 py-3 hover:bg-gray-600/50 transition-colors flex items-center space-x-3"
+                          >
+                            <span className="text-2xl">{country.flag}</span>
+                            <div>
+                              <div className="text-white font-medium">{country.name}</div>
+                              <div className="text-gray-400 text-sm">{country.region}</div>
+                            </div>
+                          </button>
+                        ))}
                       </div>
                     )}
                   </div>
-                ))}
+                  {validationErrors.country && (
+                    <p className="text-red-400 text-sm mt-1">{validationErrors.country}</p>
+                  )}
+                </div>
 
+                {/* Selected Country Display */}
+                {formData.country && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="bg-gray-700/30 border border-gray-600/30 rounded-xl p-4"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <span className="text-3xl">{formData.country.flag}</span>
+                      <div>
+                        <div className="text-white font-semibold text-lg">{formData.country.name}</div>
+                        <div className="text-gray-400">{formData.country.region}</div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Optional Fields Toggle */}
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={() => setShowOptionalFields(!showOptionalFields)}
+                    className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors"
+                  >
+                    {showOptionalFields ? 'Hide' : 'Add'} Optional Details (Food, Drinks, Movies)
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Step 2: Optional Details */}
+            {step === 2 && showOptionalFields && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="space-y-6"
+              >
+                {/* Overall Notes */}
+                <div>
+                  <label htmlFor="notes" className="block text-sm font-medium text-gray-300 mb-2">
+                    Overall Experience Notes
+                  </label>
+                  <textarea
+                    id="notes"
+                    value={formData.overall_notes}
+                    onChange={(e) => setFormData(prev => ({ ...prev, overall_notes: e.target.value }))}
+                    rows={3}
+                    placeholder="Share your thoughts about this cultural experience..."
+                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50 focus:border-transparent"
+                  />
+                </div>
+
+                {/* Optional: Add Food, Drinks, Movies */}
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <p className="text-gray-400 text-sm mb-4">
+                      Optionally add specific items you tried or watched
+                    </p>
+                  </div>
+
+                  {/* Food Experiences */}
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-medium text-white">Food Experiences</h3>
+                      <button
+                        type="button"
+                        onClick={() => addCustomItem('dishes')}
+                        className="btn btn-sm btn-secondary"
+                      >
+                        <PlusIcon className="w-4 h-4" />
+                        Add
+                      </button>
+                    </div>
+                    {formData.dishes.map((dish, index) => (
+                      <div key={index} className="bg-gray-700/30 border border-gray-600/30 rounded-lg p-3 mb-2">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <input
+                            type="text"
+                            placeholder="Dish name"
+                            value={dish.name}
+                            onChange={(e) => handleDishChange(index, 'name', e.target.value)}
+                            className="flex-1 px-3 py-2 bg-gray-600/50 border border-gray-500/50 rounded text-white placeholder-gray-400 text-sm"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeItem('dishes', index)}
+                            className="text-red-400 hover:text-red-300"
+                          >
+                            <TrashIcon className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <select
+                            value={dish.difficulty}
+                            onChange={(e) => handleDishChange(index, 'difficulty', e.target.value)}
+                            className="px-3 py-2 bg-gray-600/50 border border-gray-500/50 rounded text-white text-sm"
+                          >
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                          </select>
+                          <select
+                            value={dish.rating}
+                            onChange={(e) => handleDishChange(index, 'rating', parseInt(e.target.value))}
+                            className="px-3 py-2 bg-gray-600/50 border border-gray-500/50 rounded text-white text-sm"
+                          >
+                            <option value={0}>No Rating</option>
+                            <option value={1}>1 ⭐</option>
+                            <option value={2}>2 ⭐⭐</option>
+                            <option value={3}>3 ⭐⭐⭐</option>
+                            <option value={4}>4 ⭐⭐⭐⭐</option>
+                            <option value={5}>5 ⭐⭐⭐⭐⭐</option>
+                          </select>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Drink Experiences */}
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-medium text-white">Drink Experiences</h3>
+                      <button
+                        type="button"
+                        onClick={() => addCustomItem('drinks')}
+                        className="btn btn-sm btn-secondary"
+                      >
+                        <PlusIcon className="w-4 h-4" />
+                        Add
+                      </button>
+                    </div>
+                    {formData.drinks.map((drink, index) => (
+                      <div key={index} className="bg-gray-700/30 border border-gray-600/30 rounded-lg p-3 mb-2">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <input
+                            type="text"
+                            placeholder="Drink name"
+                            value={drink.name}
+                            onChange={(e) => handleDrinkChange(index, 'name', e.target.value)}
+                            className="flex-1 px-3 py-2 bg-gray-600/50 border border-gray-500/50 rounded text-white placeholder-gray-400 text-sm"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeItem('drinks', index)}
+                            className="text-red-400 hover:text-red-300"
+                          >
+                            <TrashIcon className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <select
+                            value={drink.type}
+                            onChange={(e) => handleDrinkChange(index, 'type', e.target.value)}
+                            className="px-3 py-2 bg-gray-600/50 border border-gray-500/50 rounded text-white text-sm"
+                          >
+                            <option value="Traditional">Traditional</option>
+                            <option value="Modern">Modern</option>
+                            <option value="Local">Local</option>
+                          </select>
+                          <select
+                            value={drink.rating}
+                            onChange={(e) => handleDrinkChange(index, 'rating', parseInt(e.target.value))}
+                            className="px-3 py-2 bg-gray-600/50 border border-gray-500/50 rounded text-white text-sm"
+                          >
+                            <option value={0}>No Rating</option>
+                            <option value={1}>1 ⭐</option>
+                            <option value={2}>2 ⭐⭐</option>
+                            <option value={3}>3 ⭐⭐⭐</option>
+                            <option value={4}>4 ⭐⭐⭐⭐</option>
+                            <option value={5}>5 ⭐⭐⭐⭐⭐</option>
+                          </select>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Movie Experiences */}
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-medium text-white">Movie Experiences</h3>
+                      <button
+                        type="button"
+                        onClick={() => addCustomItem('movies')}
+                        className="btn btn-sm btn-secondary"
+                      >
+                        <PlusIcon className="w-4 h-4" />
+                        Add
+                      </button>
+                    </div>
+                    {formData.movies.map((movie, index) => (
+                      <div key={index} className="bg-gray-700/30 border border-gray-600/30 rounded-lg p-3 mb-2">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <input
+                            type="text"
+                            placeholder="Movie title"
+                            value={movie.name}
+                            onChange={(e) => handleMovieChange(index, 'name', e.target.value)}
+                            className="flex-1 px-3 py-2 bg-gray-600/50 border border-gray-500/50 rounded text-white placeholder-gray-400 text-sm"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeItem('movies', index)}
+                            className="text-red-400 hover:text-red-300"
+                          >
+                            <TrashIcon className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <input
+                            type="text"
+                            placeholder="Year"
+                            value={movie.year}
+                            onChange={(e) => handleMovieChange(index, 'year', e.target.value)}
+                            className="px-3 py-2 bg-gray-600/50 border border-gray-500/50 rounded text-white placeholder-gray-400 text-sm"
+                          />
+                          <select
+                            value={movie.rating}
+                            onChange={(e) => handleMovieChange(index, 'rating', parseInt(e.target.value))}
+                            className="px-3 py-2 bg-gray-600/50 border border-gray-500/50 rounded text-white text-sm"
+                          >
+                            <option value={0}>No Rating</option>
+                            <option value={1}>1 ⭐</option>
+                            <option value={2}>2 ⭐⭐</option>
+                            <option value={3}>3 ⭐⭐⭐</option>
+                            <option value={4}>4 ⭐⭐⭐⭐</option>
+                            <option value={5}>5 ⭐⭐⭐⭐⭐</option>
+                          </select>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Form Actions */}
+            <div className="flex items-center justify-between pt-6 border-t border-gray-700/50">
+              <div className="flex space-x-3">
+                {step === 2 && (
+                  <button
+                    type="button"
+                    onClick={() => setStep(1)}
+                    className="btn btn-secondary"
+                  >
+                    Back
+                  </button>
+                )}
                 <button
                   type="button"
-                  onClick={() => addCustomItem('dishes')}
-                  className="w-full border-2 border-dashed border-gray-300 rounded-lg p-4 text-gray-500 hover:border-warm-orange hover:text-warm-orange transition-colors"
+                  onClick={resetForm}
+                  className="btn btn-ghost"
                 >
-                  + Add Custom Dish
+                  Reset
+                </button>
+              </div>
+              
+              <div className="flex space-x-3">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="btn btn-secondary"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isLoading || !formData.country}
+                  className="btn btn-primary"
+                >
+                  {isLoading ? 'Saving...' : (experienceId ? 'Update Experience' : 'Save Experience')}
                 </button>
               </div>
             </div>
-          )}
-
-          {/* Step 3: Drinks & Movies */}
-          {step === 3 && (
-            <div className="p-6 space-y-8">
-              {/* Drinks Section */}
-              <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-4">
-                  🍹 Beverages from {formData.country.name}
-                </h3>
-                
-                <div className="space-y-4">
-                  {formData.drinks.map((drink, index) => (
-                    <div key={index} className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center space-x-3">
-                          <input
-                            type="checkbox"
-                            checked={drink.attempted}
-                            onChange={(e) => handleDrinkChange(index, 'attempted', e.target.checked)}
-                            className="w-5 h-5 text-warm-orange focus:ring-warm-orange border-gray-300 rounded"
-                          />
-                          <input
-                            type="text"
-                            value={drink.name}
-                            onChange={(e) => handleDrinkChange(index, 'name', e.target.value)}
-                            placeholder="Beverage name"
-                            className="border border-gray-300 rounded px-2 py-1 text-sm"
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeItem('drinks', index)}
-                          className="text-red-400 hover:text-red-600"
-                        >
-                          ×
-                        </button>
-                      </div>
-
-                      {drink.attempted && (
-                        <div className="space-y-3">
-                          <div>
-                            <label className="block text-sm text-gray-600 mb-1">Rating</label>
-                            {renderStarRating(drink.rating, (rating) => handleDrinkChange(index, 'rating', rating))}
-                          </div>
-                          <div>
-                            <label className="block text-sm text-gray-600 mb-1">Notes</label>
-                            <textarea
-                              value={drink.notes}
-                              onChange={(e) => handleDrinkChange(index, 'notes', e.target.value)}
-                              placeholder="How did it taste? Any special preparation?"
-                              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-                              rows="2"
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-
-                  <button
-                    type="button"
-                    onClick={() => addCustomItem('drinks')}
-                    className="w-full border-2 border-dashed border-gray-300 rounded-lg p-3 text-gray-500 hover:border-warm-orange hover:text-warm-orange transition-colors text-sm"
-                  >
-                    + Add Beverage
-                  </button>
-                </div>
-              </div>
-
-              {/* Movies Section */}
-              <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-4">
-                  🎬 Films from {formData.country.name}
-                </h3>
-                
-                <div className="space-y-4">
-                  {formData.movies.map((movie, index) => (
-                    <div key={index} className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center space-x-3">
-                          <input
-                            type="checkbox"
-                            checked={movie.watched}
-                            onChange={(e) => handleMovieChange(index, 'watched', e.target.checked)}
-                            className="w-5 h-5 text-warm-orange focus:ring-warm-orange border-gray-300 rounded"
-                          />
-                          <input
-                            type="text"
-                            value={movie.name}
-                            onChange={(e) => handleMovieChange(index, 'name', e.target.value)}
-                            placeholder="Movie title"
-                            className="border border-gray-300 rounded px-2 py-1 text-sm"
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeItem('movies', index)}
-                          className="text-red-400 hover:text-red-600"
-                        >
-                          ×
-                        </button>
-                      </div>
-
-                      {movie.watched && (
-                        <div className="space-y-3">
-                          <div>
-                            <label className="block text-sm text-gray-600 mb-1">Rating</label>
-                            {renderStarRating(movie.rating, (rating) => handleMovieChange(index, 'rating', rating))}
-                          </div>
-                          <div>
-                            <label className="block text-sm text-gray-600 mb-1">Notes</label>
-                            <textarea
-                              value={movie.notes}
-                              onChange={(e) => handleMovieChange(index, 'notes', e.target.value)}
-                              placeholder="What did you think? Cultural insights?"
-                              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-                              rows="2"
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-
-                  <button
-                    type="button"
-                    onClick={() => addCustomItem('movies')}
-                    className="w-full border-2 border-dashed border-gray-300 rounded-lg p-3 text-gray-500 hover:border-warm-orange hover:text-warm-orange transition-colors text-sm"
-                  >
-                    + Add Movie
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Step 4: Review & Notes */}
-          {step === 4 && (
-            <div className="p-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">
-                📝 Overall Experience Notes
-              </h3>
-              
-              <textarea
-                value={formData.overall_notes}
-                onChange={(e) => setFormData(prev => ({ ...prev, overall_notes: e.target.value }))}
-                placeholder="How was your overall cultural experience? Any highlights, challenges, or memorable moments?"
-                className="w-full border border-gray-300 rounded-lg px-3 py-3 focus:ring-warm-orange focus:border-warm-orange"
-                rows="6"
-              />
-
-              {validationErrors.activities && (
-                <p className="text-red-500 text-sm mt-2">{validationErrors.activities}</p>
-              )}
-
-              {validationErrors.submit && (
-                <p className="text-red-500 text-sm mt-2">{validationErrors.submit}</p>
-              )}
-            </div>
-          )}
-        </form>
-
-        {/* Footer Navigation */}
-        <div className="flex items-center justify-between p-6 border-t border-gray-200">
-          <div>
-            {step > 1 && (
-              <button
-                type="button"
-                onClick={() => setStep(step - 1)}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
-              >
-                ← Previous
-              </button>
-            )}
-          </div>
-
-          <div className="flex space-x-3">
-            {step < 4 ? (
-              <button
-                type="button"
-                onClick={() => setStep(step + 1)}
-                disabled={step === 1 && !formData.country}
-                className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next →
-              </button>
-            ) : (
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={handleSubmit}
-              >
-                {isLoading ? 'Saving...' : experienceId ? 'Update Experience' : 'Save Experience'}
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+          </form>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
 
