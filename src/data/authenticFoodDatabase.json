@@ -1,0 +1,1356 @@
+{
+  "dishes": {
+    "japan": [
+      {
+        "name": "Ramen",
+        "type": "main",
+        "description": "Traditional noodle soup with rich broth, often with pork, eggs, and vegetables",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Sushi",
+        "type": "main",
+        "description": "Vinegared rice with raw fish, vegetables, or other ingredients",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Yakitori",
+        "type": "main",
+        "description": "Grilled chicken skewers with tare sauce",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Miso Soup",
+        "type": "appetizer",
+        "description": "Traditional soup made from fermented soybean paste",
+        "difficulty": "Easy"
+      }
+    ],
+    "italy": [
+      {
+        "name": "Risotto alla Milanese",
+        "type": "main",
+        "description": "Creamy saffron risotto with bone marrow and parmesan",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Osso Buco",
+        "type": "main",
+        "description": "Braised veal shanks in white wine and broth with gremolata",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Carbonara",
+        "type": "main",
+        "description": "Pasta with eggs, pecorino cheese, guanciale, and black pepper",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Bruschetta",
+        "type": "appetizer",
+        "description": "Toasted bread topped with tomatoes, garlic, and olive oil",
+        "difficulty": "Easy"
+      }
+    ],
+    "mexico": [
+      {
+        "name": "Mole Poblano",
+        "type": "main",
+        "description": "Complex sauce with chocolate, chilies, and spices served over turkey",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Cochinita Pibil",
+        "type": "main",
+        "description": "Achiote-marinated pork wrapped in banana leaves and slow-roasted",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Chiles Rellenos",
+        "type": "main",
+        "description": "Poblano peppers stuffed with cheese, battered and fried",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Guacamole",
+        "type": "appetizer",
+        "description": "Fresh avocado dip with lime, onion, and cilantro",
+        "difficulty": "Easy"
+      }
+    ],
+    "india": [
+      {
+        "name": "Biryani",
+        "type": "main",
+        "description": "Fragrant rice dish with meat, spices, and aromatic herbs",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Butter Chicken",
+        "type": "main",
+        "description": "Tender chicken in rich tomato and cream sauce",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Dal Tadka",
+        "type": "main",
+        "description": "Lentils tempered with spices and aromatics",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Samosas",
+        "type": "appetizer",
+        "description": "Crispy pastry filled with spiced potatoes and peas",
+        "difficulty": "Medium"
+      }
+    ],
+    "france": [
+      {
+        "name": "Coq au Vin",
+        "type": "main",
+        "description": "Braised chicken in red wine with mushrooms and pearl onions",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Bouillabaisse",
+        "type": "main",
+        "description": "Provençal fish stew with saffron and rouille",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Ratatouille",
+        "type": "main",
+        "description": "Provençal vegetable stew with eggplant, zucchini, and tomatoes",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "French Onion Soup",
+        "type": "appetizer",
+        "description": "Caramelized onion soup with melted cheese and bread",
+        "difficulty": "Medium"
+      }
+    ],
+    "thailand": [
+      {
+        "name": "Pad Thai",
+        "type": "main",
+        "description": "Stir-fried rice noodles with eggs, tofu, and tamarind sauce",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Tom Yum Goong",
+        "type": "main",
+        "description": "Spicy and sour shrimp soup with lemongrass and galangal",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Green Curry",
+        "type": "main",
+        "description": "Coconut milk curry with green chilies and Thai basil",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Som Tam",
+        "type": "appetizer",
+        "description": "Green papaya salad with lime, fish sauce, and chilies",
+        "difficulty": "Easy"
+      }
+    ],
+    "morocco": [
+      {
+        "name": "Tagine",
+        "type": "main",
+        "description": "Slow-cooked stew with meat, vegetables, and preserved lemons",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Couscous",
+        "type": "main",
+        "description": "Steamed semolina grains with vegetables and meat",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Pastilla",
+        "type": "main",
+        "description": "Sweet and savory pie with pigeon, almonds, and phyllo",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Harira",
+        "type": "appetizer",
+        "description": "Hearty soup with lentils, chickpeas, and tomatoes",
+        "difficulty": "Easy"
+      }
+    ],
+    "ethiopia": [
+      {
+        "name": "Doro Wat",
+        "type": "main",
+        "description": "Spicy chicken stew with berbere spice and boiled eggs",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Kitfo",
+        "type": "main",
+        "description": "Minced beef tartare with spices and clarified butter",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Shiro",
+        "type": "main",
+        "description": "Ground chickpea stew with spices and aromatics",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Sambusas",
+        "type": "appetizer",
+        "description": "Crispy pastry filled with spiced lentils or meat",
+        "difficulty": "Medium"
+      }
+    ],
+    "argentina": [
+      {
+        "name": "Asado",
+        "type": "main",
+        "description": "Traditional barbecue with various cuts of beef",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Milanesa",
+        "type": "main",
+        "description": "Breaded and fried beef cutlet with lemon",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Locro",
+        "type": "main",
+        "description": "Hearty stew with corn, beans, and meat",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Empanadas",
+        "type": "appetizer",
+        "description": "Baked or fried pastries filled with meat or vegetables",
+        "difficulty": "Medium"
+      }
+    ],
+    "lebanon": [
+      {
+        "name": "Kibbeh",
+        "type": "main",
+        "description": "Ground meat and bulgur wheat croquettes",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Fattoush",
+        "type": "main",
+        "description": "Fresh vegetable salad with toasted pita bread",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Shawarma",
+        "type": "main",
+        "description": "Marinated meat wrapped in flatbread with vegetables",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Hummus",
+        "type": "appetizer",
+        "description": "Chickpea puree with tahini, lemon, and garlic",
+        "difficulty": "Easy"
+      }
+    ],
+    "china": [
+      {
+        "name": "Peking Duck",
+        "type": "main",
+        "description": "Crispy-skinned duck served with pancakes and hoisin sauce",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Mapo Tofu",
+        "type": "main",
+        "description": "Spicy tofu with ground pork and Sichuan peppercorns",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Kung Pao Chicken",
+        "type": "main",
+        "description": "Stir-fried chicken with peanuts, vegetables, and chili",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Xiaolongbao",
+        "type": "appetizer",
+        "description": "Soup dumplings filled with pork and broth",
+        "difficulty": "Hard"
+      }
+    ],
+    "spain": [
+      {
+        "name": "Paella",
+        "type": "main",
+        "description": "Saffron rice with seafood, chicken, and vegetables",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Tortilla Española",
+        "type": "main",
+        "description": "Spanish omelette with potatoes and onions",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Gazpacho",
+        "type": "main",
+        "description": "Cold tomato soup with cucumber and peppers",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Patatas Bravas",
+        "type": "appetizer",
+        "description": "Fried potatoes with spicy tomato sauce and aioli",
+        "difficulty": "Easy"
+      }
+    ],
+    "turkey": [
+      {
+        "name": "Kebab",
+        "type": "main",
+        "description": "Grilled meat on skewers with vegetables",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Dolma",
+        "type": "main",
+        "description": "Grape leaves stuffed with rice and herbs",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Pilaf",
+        "type": "main",
+        "description": "Fragrant rice with meat, nuts, and dried fruits",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Mezze Platter",
+        "type": "appetizer",
+        "description": "Assortment of small dishes and spreads",
+        "difficulty": "Easy"
+      }
+    ],
+    "vietnam": [
+      {
+        "name": "Pho",
+        "type": "main",
+        "description": "Rice noodle soup with beef and aromatic herbs",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Bun Bo Hue",
+        "type": "main",
+        "description": "Spicy beef noodle soup with lemongrass",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Com Tam",
+        "type": "main",
+        "description": "Broken rice with grilled pork and vegetables",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Spring Rolls",
+        "type": "appetizer",
+        "description": "Fresh rice paper rolls with vegetables and herbs",
+        "difficulty": "Easy"
+      }
+    ],
+    "greece": [
+      {
+        "name": "Moussaka",
+        "type": "main",
+        "description": "Layered eggplant casserole with ground meat and béchamel",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Souvlaki",
+        "type": "main",
+        "description": "Grilled meat skewers with pita and tzatziki",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Pastitsio",
+        "type": "main",
+        "description": "Baked pasta with ground meat and béchamel sauce",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Greek Salad",
+        "type": "appetizer",
+        "description": "Fresh vegetables with feta cheese and olives",
+        "difficulty": "Easy"
+      }
+    ],
+    "brazil": [
+      {
+        "name": "Feijoada",
+        "type": "main",
+        "description": "Black bean stew with various cuts of pork",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Moqueca",
+        "type": "main",
+        "description": "Fish stew with coconut milk and dendê oil",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Picanha",
+        "type": "main",
+        "description": "Grilled top sirloin cap with rock salt",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Coxinha",
+        "type": "appetizer",
+        "description": "Shredded chicken croquettes shaped like drumsticks",
+        "difficulty": "Medium"
+      }
+    ],
+    "korea": [
+      {
+        "name": "Bibimbap",
+        "type": "main",
+        "description": "Mixed rice bowl with vegetables, meat, and gochujang",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Kimchi Jjigae",
+        "type": "main",
+        "description": "Spicy stew with fermented kimchi and pork",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Bulgogi",
+        "type": "main",
+        "description": "Marinated grilled beef with sweet soy sauce",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Banchan",
+        "type": "appetizer",
+        "description": "Assortment of small side dishes and pickles",
+        "difficulty": "Easy"
+      }
+    ],
+    "germany": [
+      {
+        "name": "Sauerbraten",
+        "type": "main",
+        "description": "Marinated pot roast with gingersnap gravy",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Bratwurst",
+        "type": "main",
+        "description": "Grilled sausage with mustard and sauerkraut",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Schnitzel",
+        "type": "main",
+        "description": "Breaded and fried meat cutlet with lemon",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Pretzels",
+        "type": "appetizer",
+        "description": "Soft baked bread with distinctive knot shape",
+        "difficulty": "Medium"
+      }
+    ],
+    "russia": [
+      {
+        "name": "Beef Stroganoff",
+        "type": "main",
+        "description": "Sautéed beef in sour cream sauce with mushrooms",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Pelmeni",
+        "type": "main",
+        "description": "Dumplings filled with meat and served in broth",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Borscht",
+        "type": "main",
+        "description": "Beet soup with vegetables and sour cream",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Blini",
+        "type": "appetizer",
+        "description": "Thin pancakes served with caviar and sour cream",
+        "difficulty": "Easy"
+      }
+    ],
+    "egypt": [
+      {
+        "name": "Koshari",
+        "type": "main",
+        "description": "Layered dish with rice, lentils, pasta, and tomato sauce",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Molokhia",
+        "type": "main",
+        "description": "Jute leaf soup with chicken and rice",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Ful Medames",
+        "type": "main",
+        "description": "Slow-cooked fava beans with olive oil and cumin",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Baba Ganoush",
+        "type": "appetizer",
+        "description": "Roasted eggplant dip with tahini and garlic",
+        "difficulty": "Easy"
+      }
+    ],
+    "indonesia": [
+      {
+        "name": "Nasi Goreng",
+        "type": "main",
+        "description": "Indonesian fried rice with kecap manis and shrimp paste",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Rendang",
+        "type": "main",
+        "description": "Slow-cooked beef in coconut milk and spices",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Satay",
+        "type": "main",
+        "description": "Grilled meat skewers with peanut sauce",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Gado-gado",
+        "type": "appetizer",
+        "description": "Vegetable salad with peanut sauce dressing",
+        "difficulty": "Easy"
+      }
+    ],
+    "nigeria": [
+      {
+        "name": "Jollof Rice",
+        "type": "main",
+        "description": "Spiced rice cooked in tomato sauce with meat",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Egusi Soup",
+        "type": "main",
+        "description": "Ground melon seed soup with leafy vegetables",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Pepper Soup",
+        "type": "main",
+        "description": "Spicy broth with meat and aromatic spices",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Suya",
+        "type": "appetizer",
+        "description": "Spicy grilled meat skewers with groundnut powder",
+        "difficulty": "Medium"
+      }
+    ],
+    "australia": [
+      {
+        "name": "Meat Pie",
+        "type": "main",
+        "description": "Flaky pastry filled with minced meat and gravy",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Barramundi",
+        "type": "main",
+        "description": "Grilled or pan-fried Australian sea bass",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Lamb Roast",
+        "type": "main",
+        "description": "Roasted lamb with rosemary and garlic",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Damper",
+        "type": "appetizer",
+        "description": "Traditional bush bread cooked over coals",
+        "difficulty": "Easy"
+      }
+    ],
+    "canada": [
+      {
+        "name": "Poutine",
+        "type": "main",
+        "description": "French fries topped with cheese curds and gravy",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Tourtière",
+        "type": "main",
+        "description": "Meat pie with ground pork and spices",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Maple Glazed Salmon",
+        "type": "main",
+        "description": "Salmon with Canadian maple syrup glaze",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Bannock",
+        "type": "appetizer",
+        "description": "Traditional Indigenous flatbread",
+        "difficulty": "Easy"
+      }
+    ],
+    "iran": [
+      {
+        "name": "Ghormeh Sabzi",
+        "type": "main",
+        "description": "Herb stew with meat, kidney beans, and dried limes",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Tahdig",
+        "type": "main",
+        "description": "Crispy rice bottom with saffron and butter",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Fesenjan",
+        "type": "main",
+        "description": "Pomegranate and walnut stew with meat",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Kashk-e Bademjan",
+        "type": "appetizer",
+        "description": "Eggplant dip with whey and fried onions",
+        "difficulty": "Easy"
+      }
+    ],
+    "philippines": [
+      {
+        "name": "Adobo",
+        "type": "main",
+        "description": "Meat marinated in vinegar, soy sauce, and garlic",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Sinigang",
+        "type": "main",
+        "description": "Sour tamarind soup with meat and vegetables",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Kare-kare",
+        "type": "main",
+        "description": "Peanut stew with meat and vegetables",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Lumpia",
+        "type": "appetizer",
+        "description": "Fresh or fried spring rolls with vegetables",
+        "difficulty": "Medium"
+      }
+    ],
+    "saudi_arabia": [
+      {
+        "name": "Kabsa",
+        "type": "main",
+        "description": "Spiced rice with meat and aromatic spices",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Mandi",
+        "type": "main",
+        "description": "Slow-cooked meat and rice with Yemeni spices",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Shawarma",
+        "type": "main",
+        "description": "Marinated meat wrapped in flatbread",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Hummus",
+        "type": "appetizer",
+        "description": "Chickpea puree with tahini and olive oil",
+        "difficulty": "Easy"
+      }
+    ],
+    "south_africa": [
+      {
+        "name": "Bobotie",
+        "type": "main",
+        "description": "Spiced minced meat with egg custard topping",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Biltong",
+        "type": "main",
+        "description": "Air-dried cured meat with vinegar and spices",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Potjiekos",
+        "type": "main",
+        "description": "Slow-cooked stew in cast iron pot",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Biltong",
+        "type": "appetizer",
+        "description": "Dried cured meat strips",
+        "difficulty": "Hard"
+      }
+    ],
+    "chile": [
+      {
+        "name": "Pastel de Choclo",
+        "type": "main",
+        "description": "Corn pie with ground meat and hard-boiled eggs",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Cazuela",
+        "type": "main",
+        "description": "Hearty soup with meat, vegetables, and rice",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Empanadas",
+        "type": "main",
+        "description": "Baked pastries filled with meat or seafood",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Pebre",
+        "type": "appetizer",
+        "description": "Fresh salsa with tomatoes, onions, and cilantro",
+        "difficulty": "Easy"
+      }
+    ],
+    "sweden": [
+      {
+        "name": "Meatballs",
+        "type": "main",
+        "description": "Ground meat balls with lingonberry sauce",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Gravlax",
+        "type": "main",
+        "description": "Cured salmon with dill and mustard sauce",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Janssons Frestelse",
+        "type": "main",
+        "description": "Potato casserole with anchovies and cream",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Pickled Herring",
+        "type": "appetizer",
+        "description": "Marinated herring with onions and dill",
+        "difficulty": "Easy"
+      }
+    ],
+    "poland": [
+      {
+        "name": "Bigos",
+        "type": "main",
+        "description": "Hunter's stew with sauerkraut and meat",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Pierogi",
+        "type": "main",
+        "description": "Dumplings filled with meat, cheese, or potatoes",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Kotlet Schabowy",
+        "type": "main",
+        "description": "Breaded pork cutlet with mashed potatoes",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Zupa Ogórkowa",
+        "type": "appetizer",
+        "description": "Dill pickle soup with potatoes",
+        "difficulty": "Easy"
+      }
+    ],
+    "ukraine": [
+      {
+        "name": "Borscht",
+        "type": "main",
+        "description": "Beet soup with meat and vegetables",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Varenyky",
+        "type": "main",
+        "description": "Boiled dumplings with various fillings",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Holubtsi",
+        "type": "main",
+        "description": "Cabbage rolls filled with meat and rice",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Salo",
+        "type": "appetizer",
+        "description": "Cured pork fatback with bread and garlic",
+        "difficulty": "Easy"
+      }
+    ],
+    "norway": [
+      {
+        "name": "Lutefisk",
+        "type": "main",
+        "description": "Dried cod rehydrated in lye solution",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Fårikål",
+        "type": "main",
+        "description": "Lamb and cabbage stew with black pepper",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Rakfisk",
+        "type": "main",
+        "description": "Fermented trout with flatbread",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Brunost",
+        "type": "appetizer",
+        "description": "Brown cheese with crackers",
+        "difficulty": "Easy"
+      }
+    ],
+    "israel": [
+      {
+        "name": "Shakshuka",
+        "type": "main",
+        "description": "Eggs poached in tomato sauce with peppers",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Falafel",
+        "type": "main",
+        "description": "Deep-fried chickpea fritters with tahini",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Sabich",
+        "type": "main",
+        "description": "Pita sandwich with eggplant and hard-boiled eggs",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Hummus",
+        "type": "appetizer",
+        "description": "Chickpea puree with tahini and olive oil",
+        "difficulty": "Easy"
+      }
+    ],
+    "pakistan": [
+      {
+        "name": "Biryani",
+        "type": "main",
+        "description": "Layered rice with meat and aromatic spices",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Karahi",
+        "type": "main",
+        "description": "Spicy meat curry cooked in wok-style pan",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Nihari",
+        "type": "main",
+        "description": "Slow-cooked beef stew with bone marrow",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Pakoras",
+        "type": "appetizer",
+        "description": "Vegetable fritters in chickpea flour batter",
+        "difficulty": "Easy"
+      }
+    ],
+    "bangladesh": [
+      {
+        "name": "Ilish Bhapa",
+        "type": "main",
+        "description": "Steamed hilsa fish with mustard paste",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Kacchi Biryani",
+        "type": "main",
+        "description": "Layered rice with raw meat and spices",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Bhuna Khichuri",
+        "type": "main",
+        "description": "Spiced rice and lentils with meat",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Bhorta",
+        "type": "appetizer",
+        "description": "Mashed vegetables with spices and oil",
+        "difficulty": "Easy"
+      }
+    ],
+    "hungary": [
+      {
+        "name": "Goulash",
+        "type": "main",
+        "description": "Hearty stew with beef, paprika, and vegetables",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Chicken Paprikash",
+        "type": "main",
+        "description": "Chicken in paprika cream sauce with dumplings",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Lángos",
+        "type": "main",
+        "description": "Deep-fried flatbread with sour cream and cheese",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Lecsó",
+        "type": "appetizer",
+        "description": "Stewed peppers and tomatoes with eggs",
+        "difficulty": "Easy"
+      }
+    ],
+    "czech_republic": [
+      {
+        "name": "Svíčková",
+        "type": "main",
+        "description": "Beef sirloin with cream sauce and dumplings",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Guláš",
+        "type": "main",
+        "description": "Beef stew with onions and paprika",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Vepřo-knedlo-zelo",
+        "type": "main",
+        "description": "Roast pork with dumplings and sauerkraut",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Bramboráky",
+        "type": "appetizer",
+        "description": "Potato pancakes with garlic and marjoram",
+        "difficulty": "Easy"
+      }
+    ],
+    "romania": [
+      {
+        "name": "Sarmale",
+        "type": "main",
+        "description": "Cabbage rolls filled with meat and rice",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Mici",
+        "type": "main",
+        "description": "Grilled minced meat rolls with mustard",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Ciorbă",
+        "type": "main",
+        "description": "Sour soup with meat and vegetables",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Salată de Vinete",
+        "type": "appetizer",
+        "description": "Roasted eggplant salad with onions",
+        "difficulty": "Easy"
+      }
+    ],
+    "croatia": [
+      {
+        "name": "Pašticada",
+        "type": "main",
+        "description": "Slow-cooked beef with prunes and wine sauce",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Crni Rižot",
+        "type": "main",
+        "description": "Black risotto with cuttlefish ink",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Peka",
+        "type": "main",
+        "description": "Meat and vegetables cooked under bell lid",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Pršut",
+        "type": "appetizer",
+        "description": "Dry-cured ham with cheese and olives",
+        "difficulty": "Easy"
+      }
+    ],
+    "portugal": [
+      {
+        "name": "Bacalhau à Brás",
+        "type": "main",
+        "description": "Shredded cod with eggs and potatoes",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Francesinha",
+        "type": "main",
+        "description": "Sandwich with meat, cheese, and beer sauce",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Cozido à Portuguesa",
+        "type": "main",
+        "description": "Boiled meat and vegetables with sausages",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Pastéis de Bacalhau",
+        "type": "appetizer",
+        "description": "Codfish fritters with parsley",
+        "difficulty": "Medium"
+      }
+    ],
+    "netherlands": [
+      {
+        "name": "Stamppot",
+        "type": "main",
+        "description": "Mashed potatoes with vegetables and sausage",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Hutspot",
+        "type": "main",
+        "description": "Mashed potatoes with carrots and onions",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Erwtensoep",
+        "type": "main",
+        "description": "Split pea soup with sausage and bacon",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Bitterballen",
+        "type": "appetizer",
+        "description": "Deep-fried meat croquettes with mustard",
+        "difficulty": "Medium"
+      }
+    ],
+    "belgium": [
+      {
+        "name": "Moules-frites",
+        "type": "main",
+        "description": "Mussels with fries and white wine sauce",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Carbonnade",
+        "type": "main",
+        "description": "Beef stew with beer and onions",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Waterzooi",
+        "type": "main",
+        "description": "Creamy stew with chicken or fish",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Frites",
+        "type": "appetizer",
+        "description": "Double-fried potatoes with mayonnaise",
+        "difficulty": "Easy"
+      }
+    ],
+    "austria": [
+      {
+        "name": "Wiener Schnitzel",
+        "type": "main",
+        "description": "Breaded veal cutlet with lemon and potatoes",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Tafelspitz",
+        "type": "main",
+        "description": "Boiled beef with horseradish sauce",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Goulash",
+        "type": "main",
+        "description": "Beef stew with paprika and onions",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Kaiserschmarrn",
+        "type": "appetizer",
+        "description": "Shredded pancake with raisins and jam",
+        "difficulty": "Medium"
+      }
+    ],
+    "switzerland": [
+      {
+        "name": "Rösti",
+        "type": "main",
+        "description": "Crispy grated potato cake with cheese",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Fondue",
+        "type": "main",
+        "description": "Melted cheese with bread and vegetables",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Zürcher Geschnetzeltes",
+        "type": "main",
+        "description": "Sliced veal in cream sauce with mushrooms",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Raclette",
+        "type": "appetizer",
+        "description": "Melted cheese with potatoes and pickles",
+        "difficulty": "Easy"
+      }
+    ],
+    "ireland": [
+      {
+        "name": "Irish Stew",
+        "type": "main",
+        "description": "Lamb stew with potatoes and root vegetables",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Colcannon",
+        "type": "main",
+        "description": "Mashed potatoes with cabbage and butter",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Boxty",
+        "type": "main",
+        "description": "Potato pancakes with flour and buttermilk",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Soda Bread",
+        "type": "appetizer",
+        "description": "Quick bread made with buttermilk and soda",
+        "difficulty": "Easy"
+      }
+    ],
+    "denmark": [
+      {
+        "name": "Frikadeller",
+        "type": "main",
+        "description": "Danish meatballs with gravy and potatoes",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Stjerneskud",
+        "type": "main",
+        "description": "Open-faced sandwich with fish and shrimp",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Hakkebøf",
+        "type": "main",
+        "description": "Pan-fried beef patty with onions and gravy",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Rugbrød",
+        "type": "appetizer",
+        "description": "Dark rye bread with seeds",
+        "difficulty": "Medium"
+      }
+    ],
+    "finland": [
+      {
+        "name": "Karelian Pies",
+        "type": "main",
+        "description": "Rice-filled pastries with egg butter",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Kalakukko",
+        "type": "main",
+        "description": "Fish and pork pie baked in rye bread",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Lohikeitto",
+        "type": "main",
+        "description": "Salmon soup with cream and dill",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Karjalanpiirakka",
+        "type": "appetizer",
+        "description": "Rice-filled pastries with egg butter",
+        "difficulty": "Medium"
+      }
+    ],
+    "venezuela": [
+      {
+        "name": "Pabellón Criollo",
+        "type": "main",
+        "description": "Shredded beef with black beans and rice",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Arepas",
+        "type": "main",
+        "description": "Cornmeal patties filled with various ingredients",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Hallacas",
+        "type": "main",
+        "description": "Corn dough filled with meat and vegetables",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Tequeños",
+        "type": "appetizer",
+        "description": "Cheese sticks wrapped in dough and fried",
+        "difficulty": "Easy"
+      }
+    ],
+    "colombia": [
+      {
+        "name": "Bandeja Paisa",
+        "type": "main",
+        "description": "Platter with beans, rice, meat, and plantains",
+        "difficulty": "Hard"
+      },
+      {
+        "name": "Ajiaco",
+        "type": "main",
+        "description": "Chicken and potato soup with corn",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Sancocho",
+        "type": "main",
+        "description": "Hearty soup with meat, vegetables, and plantains",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Arepas",
+        "type": "appetizer",
+        "description": "Cornmeal patties with cheese or meat",
+        "difficulty": "Easy"
+      }
+    ],
+    "ecuador": [
+      {
+        "name": "Ceviche",
+        "type": "main",
+        "description": "Fresh seafood marinated in citrus juice",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Encebollado",
+        "type": "main",
+        "description": "Fish soup with yuca and pickled onions",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Seco de Chivo",
+        "type": "main",
+        "description": "Goat stew with beer and spices",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Empanadas",
+        "type": "appetizer",
+        "description": "Fried pastries filled with cheese or meat",
+        "difficulty": "Medium"
+      }
+    ],
+    "uruguay": [
+      {
+        "name": "Chivito",
+        "type": "main",
+        "description": "Steak sandwich with ham, cheese, and eggs",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Asado",
+        "type": "main",
+        "description": "Barbecue with various cuts of beef",
+        "difficulty": "Medium"
+      },
+      {
+        "name": "Milanesa",
+        "type": "main",
+        "description": "Breaded and fried meat cutlet",
+        "difficulty": "Easy"
+      },
+      {
+        "name": "Empanadas",
+        "type": "appetizer",
+        "description": "Baked pastries with meat or cheese",
+        "difficulty": "Medium"
+      }
+    ]
+  }
+}

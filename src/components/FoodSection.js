@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, ChefHat, Calendar, Star, Utensils, Clock3, TrendingUp } from 'lucide-react';
-import foodDatabase from '../data/foodDatabaseComplete.json';
+import foodDatabase from '../data/authenticFoodDatabase.json';
 
 const FoodSection = ({ selectedCountry }) => {
   const [expandedRecipe, setExpandedRecipe] = useState(null);
@@ -59,14 +59,6 @@ const FoodSection = ({ selectedCountry }) => {
     return new Date(cookedDishes[dishId].date);
   };
 
-  // Format time
-  const formatTime = (minutes) => {
-    if (minutes < 60) return `${minutes}m`;
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
-  };
-
   // Get difficulty color with dark mode support
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
@@ -84,6 +76,15 @@ const FoodSection = ({ selectedCountry }) => {
       case 'Medium': return <Utensils className="w-4 h-4" />;
       case 'Hard': return <TrendingUp className="w-4 h-4" />;
       default: return <ChefHat className="w-4 h-4" />;
+    }
+  };
+
+  // Get dish emoji based on type
+  const getDishEmoji = (type) => {
+    switch (type) {
+      case 'main': return '🍽️';
+      case 'appetizer': return '🥗';
+      default: return '🍴';
     }
   };
 
@@ -136,7 +137,7 @@ const FoodSection = ({ selectedCountry }) => {
         <AnimatePresence>
           {filteredDishes.map((dish, index) => (
             <motion.div
-              key={dish.id}
+              key={dish.name}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -148,7 +149,7 @@ const FoodSection = ({ selectedCountry }) => {
                 <div className="flex items-start space-x-8">
                   {/* Left Side - Image and Basic Info */}
                   <div className="flex-shrink-0">
-                    <div className="text-6xl mb-4">{dish.image}</div>
+                    <div className="text-6xl mb-4">{getDishEmoji(dish.type)}</div>
                     <div className="flex items-center space-x-3 mb-4">
                       <span className={`px-3 py-2 rounded-full text-xs font-medium border ${getDifficultyColor(dish.difficulty)}`}>
                         <div className="flex items-center space-x-2">
@@ -156,9 +157,16 @@ const FoodSection = ({ selectedCountry }) => {
                           <span>{dish.difficulty}</span>
                         </div>
                       </span>
-                      {isCooked(dish.id) && (
+                      <span className={`px-3 py-2 rounded-full text-xs font-medium border ${
+                        dish.type === 'main' 
+                          ? 'text-blue-400 bg-blue-900/20 border-blue-500/30' 
+                          : 'text-purple-400 bg-purple-900/20 border-purple-500/30'
+                      }`}>
+                        {dish.type === 'main' ? 'Main Dish' : 'Appetizer/Starter'}
+                      </span>
+                      {isCooked(dish.name) && (
                         <button
-                          onClick={() => markAsNotCooked(dish.id)}
+                          onClick={() => markAsNotCooked(dish.name)}
                           className="text-green-400 hover:text-green-300 transition-colors p-2 rounded-full hover:bg-green-900/20"
                           title="Mark as not cooked"
                           aria-label="Remove from cooked dishes"
@@ -174,38 +182,26 @@ const FoodSection = ({ selectedCountry }) => {
                     <h3 className="text-3xl font-bold mb-4 text-white leading-tight">{dish.name}</h3>
                     <p className="text-gray-300 mb-6 leading-relaxed text-lg">{dish.description}</p>
 
-                    {/* Time and Difficulty Info */}
-                    <div className="flex items-center space-x-8 text-base text-gray-400 mb-6">
-                      <div className="flex items-center space-x-3">
-                        <Clock className="w-6 h-6 text-blue-400" />
-                        <span>Prep: {formatTime(dish.prep_time)}</span>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <Clock3 className="w-6 h-6 text-purple-400" />
-                        <span>Cook: {formatTime(dish.cook_time)}</span>
-                      </div>
-                    </div>
-
                     {/* Cooked Status */}
-                    {isCooked(dish.id) && (
+                    {isCooked(dish.name) && (
                       <div className="flex items-center space-x-3 text-base text-green-400 mb-6 p-4 bg-green-900/20 rounded-xl border border-green-500/30">
                         <Calendar className="w-5 h-5" />
-                        <span>Cooked on {getCookedDate(dish.id).toLocaleDateString()}</span>
+                        <span>Cooked on {getCookedDate(dish.name).toLocaleDateString()}</span>
                       </div>
                     )}
 
                     {/* Action Buttons */}
                     <div className="flex space-x-4">
                       <button
-                        onClick={() => setExpandedRecipe(expandedRecipe === dish.id ? null : dish.id)}
+                        onClick={() => setExpandedRecipe(expandedRecipe === dish.name ? null : dish.name)}
                         className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-8 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 text-lg"
-                        aria-label={expandedRecipe === dish.id ? 'Hide recipe details' : 'Show recipe details'}
+                        aria-label={expandedRecipe === dish.name ? 'Hide dish details' : 'Show dish details'}
                       >
-                        {expandedRecipe === dish.id ? 'Hide Recipe' : 'Show Recipe'}
+                        {expandedRecipe === dish.name ? 'Hide Details' : 'Show Details'}
                       </button>
-                      {!isCooked(dish.id) && (
+                      {!isCooked(dish.name) && (
                         <button
-                          onClick={() => markAsCooked(dish.id)}
+                          onClick={() => markAsCooked(dish.name)}
                           className="bg-gray-700 hover:bg-gray-600 text-gray-200 font-medium py-4 px-6 rounded-xl transition-all duration-200 hover:shadow-lg focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 text-lg"
                           title="Mark as cooked"
                           aria-label="Mark dish as cooked"
@@ -218,9 +214,9 @@ const FoodSection = ({ selectedCountry }) => {
                 </div>
               </div>
 
-              {/* Expanded Recipe Content */}
+              {/* Expanded Dish Content */}
               <AnimatePresence>
-                {expandedRecipe === dish.id && (
+                {expandedRecipe === dish.name && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
@@ -228,55 +224,22 @@ const FoodSection = ({ selectedCountry }) => {
                     transition={{ duration: 0.3 }}
                     className="border-t border-gray-700/50 overflow-hidden"
                   >
-                    <div className="p-8 space-y-8">
-                      {/* Ingredients and Instructions in Grid */}
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        {/* Ingredients */}
-                        <div>
-                          <h4 className="text-2xl font-bold mb-6 flex items-center space-x-3 text-white">
-                            <Utensils className="w-7 h-7 text-blue-400" />
-                            <span>Ingredients</span>
-                          </h4>
-                          <ul className="space-y-3">
-                            {dish.ingredients.map((ingredient, idx) => (
-                              <li key={idx} className="flex items-center space-x-4 p-4 bg-gray-700/30 rounded-xl border border-gray-600/30">
-                                <div className="w-3 h-3 bg-blue-500 rounded-full flex-shrink-0"></div>
-                                <span className="font-semibold text-blue-300 min-w-0">{ingredient.quantity} {ingredient.unit}</span>
-                                <span className="text-gray-300 flex-1 text-lg">{ingredient.item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        {/* Instructions */}
-                        <div>
-                          <h4 className="text-2xl font-bold mb-6 flex items-center space-x-3 text-white">
-                            <ChefHat className="w-7 h-7 text-purple-400" />
-                            <span>Instructions</span>
-                          </h4>
-                          <ol className="space-y-4">
-                            {dish.instructions.map((instruction, idx) => (
-                              <li key={idx} className="flex space-x-4 p-4 bg-gray-700/30 rounded-xl border border-gray-600/30">
-                                <span className="flex-shrink-0 w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center text-lg font-bold">
-                                  {idx + 1}
-                                </span>
-                                <span className="text-gray-300 leading-relaxed text-lg">{instruction}</span>
-                              </li>
-                            ))}
-                          </ol>
+                    <div className="p-8">
+                      <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-6">
+                        <h4 className="text-2xl font-bold mb-4 text-blue-300 flex items-center space-x-3">
+                          <span>💡</span>
+                          <span>Cultural Significance</span>
+                        </h4>
+                        <p className="text-blue-200 leading-relaxed text-lg">
+                          {dish.name} is a beloved traditional dish that represents the authentic flavors and cooking techniques of {selectedCountry.name}. 
+                          This {dish.type} showcases the local ingredients and culinary heritage that locals cherish and visitors should experience.
+                        </p>
+                        <div className="mt-4 p-4 bg-gray-700/30 rounded-lg border border-gray-600/30">
+                          <p className="text-gray-300 text-sm">
+                            <strong>Difficulty Level:</strong> {dish.difficulty} • <strong>Type:</strong> {dish.type === 'main' ? 'Main Course' : 'Appetizer/Starter'}
+                          </p>
                         </div>
                       </div>
-
-                      {/* Tips - Full Width */}
-                      {dish.tips && (
-                        <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-8">
-                          <h4 className="text-2xl font-bold mb-4 text-blue-300 flex items-center space-x-3">
-                            <span>💡</span>
-                            <span>Pro Tips</span>
-                          </h4>
-                          <p className="text-blue-200 leading-relaxed text-lg">{dish.tips}</p>
-                        </div>
-                      )}
                     </div>
                   </motion.div>
                 )}
@@ -305,13 +268,13 @@ const FoodSection = ({ selectedCountry }) => {
             <span>Cooking Progress</span>
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {Object.entries(cookedDishes).map(([dishId, data]) => {
-              const dish = countryDishes.find(d => d.id === dishId);
+            {Object.entries(cookedDishes).map(([dishName, data]) => {
+              const dish = countryDishes.find(d => d.name === dishName);
               if (!dish || data.country !== selectedCountry.id) return null;
               
               return (
-                <div key={dishId} className="flex items-center space-x-4 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
-                  <span className="text-3xl">{dish.image}</span>
+                <div key={dishName} className="flex items-center space-x-4 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
+                  <span className="text-3xl">{getDishEmoji(dish.type)}</span>
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-green-300 text-lg truncate">{dish.name}</p>
                     <p className="text-sm text-green-400">
@@ -319,7 +282,7 @@ const FoodSection = ({ selectedCountry }) => {
                     </p>
                   </div>
                   <button
-                    onClick={() => markAsNotCooked(dishId)}
+                    onClick={() => markAsNotCooked(dishName)}
                     className="text-green-400 hover:text-green-300 transition-colors p-2 rounded-full hover:bg-green-900/20 flex-shrink-0"
                     title="Remove from cooked list"
                     aria-label="Remove dish from cooked list"
