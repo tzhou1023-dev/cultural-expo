@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   GlobeAltIcon, 
-  ShoppingBagIcon, 
   ChartBarIcon, 
   PlusIcon,
   HomeIcon,
@@ -16,7 +15,7 @@ import CountryDisplay from './components/CountryDisplay';
 import FoodSection from './components/FoodSection';
 import DrinkSection from './components/DrinkSection';
 import MovieSection from './components/MovieSection';
-import ShoppingList from './components/ShoppingList';
+
 import CulturalCalendar from './components/CulturalCalendar';
 import ExperienceEntry from './components/ExperienceEntry';
 import ProgressDashboard from './components/ProgressDashboard';
@@ -25,7 +24,7 @@ import ProgressDashboard from './components/ProgressDashboard';
 const AppContent = () => {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [showSections, setShowSections] = useState(false);
-  const [showShoppingList, setShowShoppingList] = useState(false);
+
   const [showExperienceEntry, setShowExperienceEntry] = useState(false);
   const [showProgressDashboard, setShowProgressDashboard] = useState(false);
   const [editingExperienceId, setEditingExperienceId] = useState(null);
@@ -77,9 +76,7 @@ const AppContent = () => {
           setShowSections(false);
         }
         break;
-      case 'shopping-list':
-        setShowShoppingList(true);
-        break;
+
       case 'progress-dashboard':
         setShowProgressDashboard(true);
         break;
@@ -251,17 +248,7 @@ const AppContent = () => {
               aria-label="Primary navigation"
               id="navigation"
             >
-              <motion.button
-                onClick={() => setShowShoppingList(true)}
-                className="btn btn-ghost btn-icon group"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                aria-label="Open shopping list"
-                title="Shopping List"
-              >
-                <ShoppingBagIcon className="w-5 h-5 group-hover:text-brand-primary transition-colors" aria-hidden="true" />
-                <span className="hidden sm:inline ml-2 text-sm">Shopping</span>
-              </motion.button>
+
 
               <motion.button
                 onClick={() => setShowProgressDashboard(true)}
@@ -532,19 +519,7 @@ const AppContent = () => {
 
       {/* Enhanced Modals */}
       <AnimatePresence>
-        {showShoppingList && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <ShoppingList 
-              isOpen={showShoppingList} 
-              onClose={() => setShowShoppingList(false)} 
-            />
-          </motion.div>
-        )}
+
         
         {showExperienceEntry && (
           <motion.div

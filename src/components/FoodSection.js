@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, ChefHat, Calendar, Star, Utensils, Clock3, TrendingUp } from 'lucide-react';
-import foodDatabase from '../data/foodDatabase.json';
+import foodDatabase from '../data/foodDatabaseComplete.json';
 
 const FoodSection = ({ selectedCountry }) => {
   const [expandedRecipe, setExpandedRecipe] = useState(null);
