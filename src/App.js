@@ -451,7 +451,7 @@ const AppContent = () => {
                   transition={{ delay: 0.3, duration: 0.6 }}
                 >
                   {[
-                    <FoodSection key="food" country={selectedCountry} />,
+                    <FoodSection key="food" selectedCountry={selectedCountry} />,
                     <DrinkSection key="drinks" country={selectedCountry} />,
                     <MovieSection key="movies" country={selectedCountry} />
                   ].map((component, index) => (

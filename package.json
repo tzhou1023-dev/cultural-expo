@@ -2,7 +2,14 @@
   "name": "cultural-expo",
   "version": "1.0.0",
   "description": "A React web application to discover cultures around the world with modern dark theme design",
-  "keywords": ["react", "cultural", "exploration", "dark-theme", "framer-motion", "tailwindcss"],
+  "keywords": [
+    "react",
+    "cultural",
+    "exploration",
+    "dark-theme",
+    "framer-motion",
+    "tailwindcss"
+  ],
   "author": "Cultural Expo Team",
   "license": "MIT",
   "homepage": "./",
@@ -20,6 +27,7 @@
     "@heroicons/react": "^2.2.0",
     "@tailwindcss/forms": "^0.5.10",
     "framer-motion": "^12.23.12",
+    "lucide-react": "^0.541.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-scripts": "^5.0.1"
