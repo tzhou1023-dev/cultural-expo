@@ -170,7 +170,8 @@
   button:disabled, input:disabled { opacity: 0.5; cursor: not-allowed; color: var(--text-disabled); }
   
   /* Icon and SVG overrides */
-  svg { fill: currentColor; }
+  /* Do not force-fill all SVGs; this breaks outline icons (e.g., header logo). */
+  .icon svg { fill: currentColor; }
   .icon { color: var(--text-secondary); }
   
   /* Calendar specific overrides */
