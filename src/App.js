@@ -1,41 +1,133 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  GlobeAltIcon, 
-  ChartBarIcon, 
   PlusIcon,
   HomeIcon,
-  SparklesIcon,
-  CommandLineIcon
+  ArrowPathIcon,
+  MagnifyingGlassIcon,
+  GlobeAltIcon,
+  ListBulletIcon
 } from '@heroicons/react/24/outline';
 import ToastProvider, { useToast } from './components/ToastProvider';
-import CommandPalette, { useCommandPalette } from './components/CommandPalette';
 import CountrySelector from './components/CountrySelector';
 import CountryDisplay from './components/CountryDisplay';
 import FoodSection from './components/FoodSection';
 import DrinkSection from './components/DrinkSection';
 import MovieSection from './components/MovieSection';
-
 import CulturalCalendar from './components/CulturalCalendar';
-import ExperienceEntry from './components/ExperienceEntry';
-import { getAllExperiences } from './utils/experienceManager';
+import ProgressDashboard from './components/ProgressDashboard';
+import AddExperienceModal from './components/AddExperienceModal';
+import MapView from './components/MapView';
+import { getAllExperiences, saveExperience } from './utils/experienceManager';
+import { selectRandomCountry, getAllCountries } from './utils/countrySelector';
 
-// Main App Component
+// Global error handler to catch Object.values errors
+const originalObjectValues = Object.values;
+Object.values = function(obj) {
+  try {
+    if (obj === null || obj === undefined) {
+      console.error('Object.values called with null/undefined:', obj);
+      console.trace('Object.values call stack:');
+      return [];
+    }
+    return originalObjectValues.call(this, obj);
+  } catch (error) {
+    console.error('Object.values error:', error);
+    console.trace('Object.values error stack:');
+    return [];
+  }
+};
+
 const AppContent = () => {
+  // Navigation state
+  const [currentPage, setCurrentPage] = useState('home'); // 'home' or 'explore'
   const [selectedCountry, setSelectedCountry] = useState(null);
-  const [showSections, setShowSections] = useState(false);
-
-  const [showExperienceEntry, setShowExperienceEntry] = useState(false);
+  const [showAddExperienceModal, setShowAddExperienceModal] = useState(false);
   const [editingExperienceId, setEditingExperienceId] = useState(null);
   const [initialDate, setInitialDate] = useState(null);
-  const [viewMode, setViewMode] = useState('calendar'); // 'calendar' or 'country'
   const [announcements, setAnnouncements] = useState('');
+  
+  // Explore page state
+  const [exploreViewMode, setExploreViewMode] = useState('list'); // 'list' or 'map'
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredCountries, setFilteredCountries] = useState([]);
+  const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
+  const [searchSuggestions, setSearchSuggestions] = useState([]);
   
   // Toast notifications
   const toast = useToast();
-  
-  // Command palette
-  const commandPalette = useCommandPalette();
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Only handle shortcuts when not in input fields
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        return;
+      }
+
+      if (e.metaKey || e.ctrlKey) {
+        switch (e.key) {
+          case '1':
+            e.preventDefault();
+            navigateToHome();
+            break;
+          case '2':
+            e.preventDefault();
+            navigateToExplore();
+            break;
+          case 'e':
+            e.preventDefault();
+            handleAddExperience();
+            break;
+          case 'l':
+            e.preventDefault();
+            handleRandomizer();
+            break;
+          default:
+            break;
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Get all countries for search
+  useEffect(() => {
+    const countries = getAllCountries();
+    setFilteredCountries(countries);
+  }, []);
+
+  // Filter countries based on search
+  useEffect(() => {
+    const countries = getAllCountries();
+    if (searchQuery.trim()) {
+      const filtered = countries.filter(country => 
+        country.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        country.region.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredCountries(filtered);
+      
+      // Generate search suggestions
+      const suggestions = countries
+        .filter(country => 
+          country.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          country.region.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+        .slice(0, 5)
+        .map(country => ({
+          name: country.name,
+          region: country.region,
+          flag: country.flag
+        }));
+      setSearchSuggestions(suggestions);
+      setShowSearchSuggestions(true);
+    } else {
+      setFilteredCountries(countries);
+      setShowSearchSuggestions(false);
+    }
+  }, [searchQuery]);
 
   // Accessibility announcements
   const announce = (message) => {
@@ -43,87 +135,123 @@ const AppContent = () => {
     setTimeout(() => setAnnouncements(''), 1000);
   };
 
-  const handleCountrySelect = (country) => {
-    setSelectedCountry(country);
-    setShowSections(true);
-    setViewMode('country');
-    announce(`Selected ${country.name}. Cultural sections now available.`);
-    toast.success(`Welcome to ${country.name}! 🌍`);
-  };
-
-  const resetSelection = () => {
+  // Navigation handlers
+  const navigateToHome = () => {
+    setCurrentPage('home');
     setSelectedCountry(null);
-    setShowSections(false);
-    setViewMode('calendar');
-    announce('Returned to cultural journey calendar.');
+    announce('Navigated to home page');
   };
 
-  // Command palette handlers
-  const handleCommand = (command) => {
-    switch (command) {
-      case 'add-experience':
-        handleAddExperience();
-        break;
-      case 'view-calendar':
-        setViewMode('calendar');
-        resetSelection();
-        break;
-      case 'explore-countries':
-        setViewMode('country');
-        if (selectedCountry) {
-          setSelectedCountry(null);
-          setShowSections(false);
-        }
-        break;
-      case 'open-command-palette':
-        commandPalette.open();
-        break;
-      default:
-        break;
+  const navigateToExplore = () => {
+    setCurrentPage('explore');
+    setSelectedCountry(null);
+    announce('Navigated to explore page');
+  };
+
+  const navigateToCountryDetail = (country) => {
+    setSelectedCountry(country);
+    setCurrentPage('explore');
+    announce(`Navigated to ${country.name} details`);
+  };
+
+  // Global CTA handlers
+  const handleAddExperience = (date = null) => {
+    setInitialDate(date);
+    setShowAddExperienceModal(true);
+    announce('Opening add experience modal');
+  };
+
+  const handleRandomizer = () => {
+    const randomCountry = selectRandomCountry();
+    if (randomCountry) {
+      navigateToCountryDetail(randomCountry);
+      toast.success(`🎲 Randomly selected ${randomCountry.name}!`);
+      announce(`Randomly selected ${randomCountry.name}`);
+    } else {
+      toast.error('No countries available for random selection');
     }
   };
 
-  const handleAddExperience = (date = null) => {
-    setInitialDate(date);
-    setEditingExperienceId(null);
-    setShowExperienceEntry(true);
-    announce('Opening experience entry form.');
+  const handleCountrySelect = (country) => {
+    navigateToCountryDetail(country);
+    toast.success(`Welcome to ${country.name}! 🌍`);
+  };
+
+  const handleSuggestionSelect = (suggestion) => {
+    const country = getAllCountries().find(c => c.name === suggestion.name);
+    if (country) {
+      navigateToCountryDetail(country);
+      setSearchQuery('');
+      setShowSearchSuggestions(false);
+      toast.success(`Welcome to ${country.name}! 🌍`);
+    }
+  };
+
+  const handleBackToExplore = () => {
+    setSelectedCountry(null);
+    announce('Returned to explore page');
+  };
+
+  // Mark country as explored
+  const handleMarkAsExplored = async (country) => {
+    try {
+      const experience = {
+        date: new Date().toISOString().split('T')[0],
+        country: country,
+        dishes: [],
+        drinks: [],
+        movies: [],
+        notes: ''
+      };
+      
+      const experienceId = saveExperience(experience);
+      
+      if (experienceId) {
+        toast.success(`🎉 ${country.name} has been added to your cultural journey!`);
+        announce(`${country.name} has been added to your cultural journey.`);
+        
+        setEditingExperienceId(experienceId);
+        setInitialDate(new Date().toISOString().split('T')[0]);
+        setShowAddExperienceModal(true);
+      }
+    } catch (error) {
+      console.error('Error marking country as explored:', error);
+      toast.error('Failed to mark country as explored');
+    }
+  };
+
+  // Removed command palette handlers
+  const handleExperienceAdded = (experience) => {
+    toast.success(`🎉 Experience added for ${experience.country.name}!`);
+    announce(`Experience added for ${experience.country.name}`);
   };
 
   const handleEditExperience = (experienceId) => {
     setEditingExperienceId(experienceId);
     setInitialDate(null);
-    setShowExperienceEntry(true);
-    announce('Opening experience editor.');
+    setShowAddExperienceModal(true);
+    announce('Opening experience editor');
   };
 
   const handleDateSelect = (dateString, experiences) => {
     if (experiences.length > 0) {
-      // If there are experiences on this date, allow editing the first one
       handleEditExperience(experiences[0].id);
     } else {
-      // If no experiences, allow adding a new one
       handleAddExperience(dateString);
     }
   };
 
   // Get journey progress data
-  const getJourneyProgress = () => {
-    const experiences = getAllExperiences();
-    const totalExperiences = experiences.length;
-    const uniqueCountries = new Set(experiences.map(exp => exp.country.id)).size;
-    const totalCountries = 50; // Total countries in our database
-    const progressPercentage = Math.round((uniqueCountries / totalCountries) * 100);
-    
-    return {
-      totalExperiences,
-      uniqueCountries,
-      totalCountries,
-      progressPercentage
-    };
+  const experiences = getAllExperiences() || [];
+  const uniqueCountries = new Set(experiences.map(exp => exp.country.id)).size;
+  const totalCountries = 50; // Total countries in our database
+  const progressPercentage = Math.round((uniqueCountries / totalCountries) * 100);
+  
+  const journeyProgress = {
+    uniqueCountries,
+    totalCountries,
+    progressPercentage
   };
-
-  const journeyProgress = getJourneyProgress();
 
   // Page transition variants
   const pageVariants = {
@@ -150,32 +278,43 @@ const AppContent = () => {
         {announcements}
       </div>
 
-      {/* Modern Header */}
+      {/* Global Navigation Header */}
       <motion.header 
-        className="bg-dark-secondary border-b border-dark-border backdrop-blur-glass"
+        className="bg-dark-secondary border-b border-dark-border backdrop-blur-glass sticky top-0 z-40 shadow-lg"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         role="banner"
       >
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
             {/* Logo and Title */}
             <motion.div 
-              className="flex items-center space-x-4"
+              className="flex items-center space-x-4 cursor-pointer"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.2 }}
+              onClick={navigateToHome}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  navigateToHome();
+                }
+              }}
+              aria-label="Return to homepage"
+              title="Click to return to homepage"
             >
               <div className="relative">
                 <motion.div 
-                  className="w-12 h-12 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center shadow-glow"
+                  className="w-12 h-12 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-xl flex items-center justify-center shadow-glow"
                   whileHover={{ rotate: 360, scale: 1.1 }}
                   transition={{ duration: 0.6, ease: "easeInOut" }}
                 >
-                  <GlobeAltIcon className="w-6 h-6 text-white" />
+                  <ArrowPathIcon className="w-6 h-6 text-white" />
                 </motion.div>
                 <motion.div
-                  className="absolute -top-1 -right-1 w-3 h-3 bg-accent-success rounded-full"
+                  className="absolute -top-1 -right-1 w-3 h-3 bg-accent-secondary rounded-full"
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
@@ -190,74 +329,68 @@ const AppContent = () => {
               </div>
             </motion.div>
 
-            {/* Navigation Buttons */}
+            {/* Global CTAs - Always Visible */}
             <nav 
-              className="flex items-center space-x-2" 
+              className="flex items-center space-x-4" 
               role="navigation" 
               aria-label="Primary navigation"
-              id="navigation"
             >
+              {/* Navigation Buttons */}
               <motion.button
-                onClick={commandPalette.open}
-                className="btn btn-ghost btn-icon group"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                aria-label="Open command palette"
-                title="Command Palette (⌘K)"
+                onClick={navigateToHome}
+                className={`btn ${currentPage === 'home' ? 'btn-accent-primary' : 'btn-ghost'} group`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                aria-label="Go to home page"
+                title="Home (⌘1)"
               >
-                <CommandLineIcon className="w-5 h-5 group-hover:text-brand-primary transition-colors" aria-hidden="true" />
-                <span className="hidden sm:inline ml-2 text-sm">Commands</span>
+                <HomeIcon className="w-4 h-4 text-white group-hover:text-accent-primary transition-colors" aria-hidden="true" />
+                <span className="hidden sm:inline ml-1 text-sm">Home</span>
+                <span className="hidden lg:inline ml-2 text-xs text-white/70">⌘1</span>
               </motion.button>
 
+              <motion.button
+                onClick={navigateToExplore}
+                className={`btn ${currentPage === 'explore' ? 'btn-accent-primary' : 'btn-ghost'} group`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                aria-label="Go to explore page"
+                title="Explore (⌘2)"
+              >
+                <GlobeAltIcon className="w-4 h-4 text-white group-hover:text-accent-primary transition-colors" aria-hidden="true" />
+                <span className="hidden sm:inline ml-1 text-sm">Explore</span>
+                <span className="hidden lg:inline ml-2 text-xs text-white/70">⌘2</span>
+              </motion.button>
+
+              {/* Add Experience CTA */}
               <motion.button
                 onClick={() => handleAddExperience()}
-                className="btn btn-primary group relative overflow-hidden"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className="btn btn-ghost group"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 aria-label="Add new cultural experience"
-                title="Add Experience (⌘N)"
+                title="Add Experience (⌘E)"
               >
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-brand-secondary to-brand-tertiary opacity-0 group-hover:opacity-100 transition-opacity"
-                  layoutId="buttonBg"
-                />
-                <PlusIcon className="w-4 h-4 relative z-10" aria-hidden="true" />
-                <span className="hidden sm:inline ml-1 text-sm relative z-10">Add Experience</span>
+                <PlusIcon className="w-4 h-4 text-white group-hover:text-accent-primary transition-colors" aria-hidden="true" />
+                <span className="hidden sm:inline ml-1 text-sm">Add Experience</span>
+                <span className="hidden lg:inline ml-2 text-xs text-white/70">⌘E</span>
               </motion.button>
 
-              {viewMode === 'country' && (
-                <motion.button
-                  onClick={resetSelection}
-                  className="btn btn-secondary group"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  aria-label="Return to calendar view"
-                  title="Back to Calendar (⌘H)"
-                >
-                  <HomeIcon className="w-4 h-4 group-hover:text-brand-primary transition-colors" aria-hidden="true" />
-                  <span className="hidden sm:inline ml-1 text-sm">Home</span>
-                </motion.button>
-              )}
+              {/* Randomizer CTA */}
+              <motion.button
+                onClick={handleRandomizer}
+                className="btn btn-ghost group"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                aria-label="Random country selector"
+                title="Random Country (⌘L)"
+              >
+                <ArrowPathIcon className="w-4 h-4 text-white group-hover:text-accent-primary transition-colors" aria-hidden="true" />
+                <span className="hidden sm:inline ml-1 text-sm">Random</span>
+                <span className="hidden lg:inline ml-2 text-xs text-white/70">⌘L</span>
+              </motion.button>
 
-              {viewMode === 'calendar' && (
-                <motion.button
-                  onClick={() => setViewMode('country')}
-                  className="btn btn-secondary group"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  aria-label="Explore countries"
-                  title="Explore Countries"
-                >
-                  <SparklesIcon className="w-4 h-4 group-hover:text-brand-primary transition-colors" aria-hidden="true" />
-                  <span className="hidden sm:inline ml-1 text-sm">Explore</span>
-                </motion.button>
-              )}
+              {/* Removed Command Palette */}
             </nav>
           </div>
         </div>
@@ -265,144 +398,212 @@ const AppContent = () => {
 
       {/* Main Content */}
       <main 
-        className="container mx-auto px-4 py-8" 
+        className="container mx-auto px-6 py-12" 
         id="main-content"
         role="main"
         aria-label="Cultural exploration content"
       >
         <AnimatePresence mode="wait">
-          {viewMode === 'calendar' ? (
+          {currentPage === 'home' && (
             <motion.div 
-              key="calendar"
+              key="home"
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={pageVariants}
+              transition={pageTransition}
+              className="flex flex-col lg:flex-row gap-12"
+            >
+              {/* Main Calendar Section */}
+              <div className="flex-1">
+                <motion.div 
+                  className="text-center mb-12"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.6 }}
+                >
+                  <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-6 tracking-tight">
+                    Your Cultural Journey
+                  </h2>
+                  <p className="text-lg text-text-secondary mb-12 leading-relaxed max-w-2xl mx-auto">
+                    Track your cultural experiences and discover new traditions through our interactive calendar
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.4, duration: 0.6 }}
+                >
+                  <CulturalCalendar
+                    onDateSelect={handleDateSelect}
+                    onAddExperience={handleAddExperience}
+                    onEditExperience={handleEditExperience}
+                  />
+                </motion.div>
+              </div>
+
+              {/* Progress Sidebar */}
+              <div className="lg:w-80">
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3, duration: 0.6 }}
+                >
+                  <ProgressDashboard 
+                    progress={journeyProgress}
+                    onExploreClick={navigateToExplore}
+                  />
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
+
+          {currentPage === 'explore' && !selectedCountry && (
+            <motion.div 
+              key="explore"
               initial="initial"
               animate="in"
               exit="out"
               variants={pageVariants}
               transition={pageTransition}
             >
+              {/* Explore Page Header */}
               <motion.div 
-                className="text-center mb-8"
+                className="text-center mb-12"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
               >
-                <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4 tracking-tight">
-                  Your Cultural Journey
+                <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-6 tracking-tight">
+                  Explore Countries
                 </h2>
-                <p className="text-lg text-text-secondary mb-8 leading-relaxed max-w-2xl mx-auto">
-                  Track your cultural experiences and discover new traditions through our interactive calendar
+                <p className="text-lg text-text-secondary mb-12 leading-relaxed max-w-2xl mx-auto">
+                  Discover fascinating cultures, cuisines, and traditions from around the world
                 </p>
               </motion.div>
 
-              {/* Journey Progress Section - Concise and Focused on Countries */}
+              {/* Toolbar */}
               <motion.div
-                className="max-w-4xl mx-auto mb-8"
+                className="bg-dark-secondary rounded-xl p-4 mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
               >
-                <div className="bg-gray-800/40 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
-                  <div className="text-center mb-6">
-                    <h3 className="text-2xl font-bold text-white mb-2">Journey Progress</h3>
-                    <p className="text-gray-300">Tracking your cultural exploration across the world</p>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-blue-400 mb-2">{journeyProgress.totalExperiences}</div>
-                      <div className="text-gray-400 text-sm">Total Experiences</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-green-400 mb-2">{journeyProgress.uniqueCountries}</div>
-                      <div className="text-gray-400 text-sm">Countries Explored</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-purple-400 mb-2">{journeyProgress.progressPercentage}%</div>
-                      <div className="text-gray-400 text-sm">World Coverage</div>
-                    </div>
-                  </div>
-                  
-                  {/* Progress Bar */}
-                  <div className="mb-4">
-                    <div className="flex justify-between text-sm text-gray-400 mb-2">
-                      <span>Progress</span>
-                      <span>{journeyProgress.uniqueCountries} of {journeyProgress.totalCountries} countries</span>
-                    </div>
-                    <div className="w-full bg-gray-700/50 rounded-full h-3">
-                      <motion.div
-                        className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${journeyProgress.progressPercentage}%` }}
-                        transition={{ duration: 1, delay: 0.5 }}
+                <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+                  {/* Search */}
+                  <div className="flex-1 max-w-md relative">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="Search countries..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onFocus={() => searchQuery.trim() && setShowSearchSuggestions(true)}
+                        onBlur={() => setTimeout(() => setShowSearchSuggestions(false), 200)}
+                        className="input pl-10 w-full focus-ring-inset"
+                        aria-label="Search countries by name or region"
                       />
+                      <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-tertiary">
+                        <MagnifyingGlassIcon className="w-5 h-5 text-white" />
+                      </div>
                     </div>
+                    
+                    {/* Search Suggestions */}
+                    <AnimatePresence>
+                      {showSearchSuggestions && searchSuggestions.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="absolute top-full left-0 right-0 mt-2 bg-dark-tertiary rounded-lg shadow-lg z-50"
+                        >
+                          {searchSuggestions.map((suggestion, index) => (
+                            <button
+                              key={index}
+                              onClick={() => handleSuggestionSelect(suggestion)}
+                              className="w-full px-4 py-3 text-left hover:bg-dark-quaternary transition-colors flex items-center space-x-3"
+                            >
+                              <span className="text-lg">{suggestion.flag}</span>
+                              <div>
+                                <div className="text-text-primary font-medium">{suggestion.name}</div>
+                                <div className="text-text-secondary text-sm">{suggestion.region}</div>
+                              </div>
+                            </button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
-                  
-                  <div className="text-center">
-                    <p className="text-gray-400 text-sm">
-                      🌍 Keep exploring to discover more cultures and traditions!
-                    </p>
+
+                  {/* View Toggle */}
+                  <div className="flex items-center bg-dark-tertiary rounded-lg p-1">
+                    <button
+                      onClick={() => setExploreViewMode('list')}
+                      className={`p-2 rounded-md transition-colors ${
+                        exploreViewMode === 'list'
+                          ? 'bg-accent-primary text-white shadow-lg'
+                          : 'text-text-secondary hover:text-text-primary hover:bg-dark-quaternary'
+                      }`}
+                      aria-label="List view"
+                      title="List View"
+                    >
+                      <ListBulletIcon className="w-5 h-5 text-white" />
+                    </button>
+                    <button
+                      onClick={() => setExploreViewMode('map')}
+                      className={`p-2 rounded-md transition-colors ${
+                        exploreViewMode === 'map'
+                          ? 'bg-accent-primary text-white shadow-lg'
+                          : 'text-text-secondary hover:text-text-primary hover:bg-dark-quaternary'
+                      }`}
+                      aria-label="Map view"
+                      title="Map View"
+                    >
+                      <GlobeAltIcon className="w-5 h-5 text-white" />
+                    </button>
                   </div>
                 </div>
               </motion.div>
 
+              {/* Content */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
               >
-                <CulturalCalendar
-                  onDateSelect={handleDateSelect}
-                  onAddExperience={handleAddExperience}
-                  onEditExperience={handleEditExperience}
-                />
+                {exploreViewMode === 'map' ? (
+                  <>
+                    <MapView
+                      countries={filteredCountries}
+                      onCountrySelect={handleCountrySelect}
+                      onClose={() => setExploreViewMode('list')}
+                    />
+                  </>
+                ) : (
+                  filteredCountries && filteredCountries.length > 0 ? (
+                    <CountrySelector 
+                      onCountrySelect={handleCountrySelect}
+                      countries={filteredCountries}
+                      onRandomSelect={handleRandomizer}
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-96">
+                      <div className="text-center text-text-secondary">
+                        <div className="text-4xl mb-4">⏳</div>
+                        <h3 className="text-lg font-semibold mb-2">Loading countries...</h3>
+                        <p className="text-sm">Please wait while we prepare your cultural exploration.</p>
+                      </div>
+                    </div>
+                  )
+                )}
               </motion.div>
             </motion.div>
-          ) : viewMode === 'country' && !selectedCountry ? (
+          )}
+
+          {currentPage === 'explore' && selectedCountry && (
             <motion.div 
-              key="country-selector"
-              initial="initial"
-              animate="in"
-              exit="out"
-              variants={pageVariants}
-              transition={pageTransition}
-              className="text-center py-16"
-            >
-              <motion.div 
-                className="max-w-2xl mx-auto"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
-              >
-                <motion.h2 
-                  className="text-4xl md:text-5xl font-bold text-text-primary mb-6 tracking-tight"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3, duration: 0.6 }}
-                >
-                  Embark on a Cultural Journey
-                </motion.h2>
-                <motion.p 
-                  className="text-xl text-text-secondary mb-12 leading-relaxed"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 0.6 }}
-                >
-                  Discover fascinating traditions, delicious cuisines, and captivating stories 
-                  from countries around the globe. Let curiosity be your guide!
-                </motion.p>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.5, duration: 0.6 }}
-                >
-                  <CountrySelector onCountrySelect={handleCountrySelect} />
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          ) : (
-            <motion.div 
-              key="country-details"
+              key="country-detail"
               initial="initial"
               animate="in"
               exit="out"
@@ -410,65 +611,74 @@ const AppContent = () => {
               transition={pageTransition}
               className="space-y-8"
             >
+              {/* Back Button */}
+              <motion.button
+                onClick={handleBackToExplore}
+                className="btn btn-ghost group mb-8"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
+                aria-label="Back to explore page"
+              >
+                <ArrowPathIcon className="w-4 h-4 text-white mr-2 group-hover:text-accent-primary transition-colors" />
+                Back to Explore
+              </motion.button>
+
+              {/* Country Details */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <CountryDisplay country={selectedCountry} />
+                <CountryDisplay 
+                  country={selectedCountry} 
+                  onMarkAsExplored={handleMarkAsExplored}
+                  onAddExperience={() => handleAddExperience()}
+                />
               </motion.div>
               
-              {showSections && (
-                <motion.div 
-                  className="space-y-12 mt-12"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3, duration: 0.6 }}
-                >
-                  {[
-                    <FoodSection key="food" selectedCountry={selectedCountry} />,
-                    <DrinkSection key="drinks" selectedCountry={selectedCountry} />,
-                    <MovieSection key="movies" selectedCountry={selectedCountry} />
-                  ].map((component, index) => (
-                    <motion.div
-                      key={component.key}
-                      className="stagger-item"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ 
-                        delay: 0.4 + (index * 0.1), 
-                        duration: 0.6 
-                      }}
-                    >
-                      {component}
-                    </motion.div>
-                  ))}
-                </motion.div>
-              )}
+              {/* Cultural Sections */}
+              <motion.div 
+                className="space-y-16 mt-16"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+              >
+                {[
+                  <FoodSection key="food" selectedCountry={selectedCountry} />,
+                  <DrinkSection key="drinks" selectedCountry={selectedCountry} />,
+                  <MovieSection key="movies" selectedCountry={selectedCountry} />
+                ].map((component, index) => (
+                  <motion.div
+                    key={component.key}
+                    className="stagger-item"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ 
+                      delay: 0.4 + (index * 0.1), 
+                      duration: 0.6 
+                    }}
+                  >
+                    {component}
+                  </motion.div>
+                ))}
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
       </main>
 
-      {/* Experience Entry Modal */}
-      <ExperienceEntry
-        isOpen={showExperienceEntry}
-        onClose={() => setShowExperienceEntry(false)}
-        experienceId={editingExperienceId}
-        initialDate={initialDate}
-      />
-
-      {/* Command Palette */}
-      <CommandPalette
-        isOpen={commandPalette.isOpen}
-        onClose={commandPalette.close}
-        onCommand={handleCommand}
+      {/* Add Experience Modal */}
+      <AddExperienceModal
+        isOpen={showAddExperienceModal}
+        onClose={() => setShowAddExperienceModal(false)}
+        selectedDate={initialDate}
+        onExperienceAdded={handleExperienceAdded}
       />
     </div>
   );
 };
 
-// App wrapper with providers
 const App = () => {
   return (
     <ToastProvider>

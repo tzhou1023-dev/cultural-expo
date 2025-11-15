@@ -145,7 +145,18 @@
       "description": "Ancient civilization with rich cultural heritage, diverse landscapes, and varied regional cuisines."
     },
     {
-      "id": "spain",
+      "id": "cuba",
+      "name": "Cuba",
+      "flag": "🇨🇺",
+      "region": "Caribbean",
+      "capital": "Havana",
+      "population": "11.3 million",
+      "language": "Spanish",
+      "currency": "Cuban Peso",
+      "cuisine_description": "Caribbean cuisine with Spanish, African, and Caribbean influences. Known for rice and beans, roasted pork, plantains, and tropical fruits. Simple ingredients transformed into flavorful dishes.",
+      "description": "Island nation with rich cultural heritage, vibrant music, classic cars, and revolutionary history."
+    },
+    {
       "name": "Spain",
       "flag": "🇪🇸",
       "region": "Southern Europe",

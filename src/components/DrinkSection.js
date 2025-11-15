@@ -1,57 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  BeakerIcon,
+  ChevronDownIcon,
+  ChevronUpIcon
+} from '@heroicons/react/24/outline';
 
-const drinkData = {
-  japan: [
-    { name: 'Sake', emoji: '🍶', description: 'Traditional rice wine', type: 'Alcoholic', temperature: 'Warm/Cold' },
-    { name: 'Matcha', emoji: '🍵', description: 'Powdered green tea', type: 'Hot Tea', temperature: 'Hot' },
-    { name: 'Ramune', emoji: '🥤', description: 'Marble soda with unique flavors', type: 'Soft Drink', temperature: 'Cold' }
-  ],
-  italy: [
-    { name: 'Espresso', emoji: '☕', description: 'Strong, concentrated coffee', type: 'Coffee', temperature: 'Hot' },
-    { name: 'Limoncello', emoji: '🍋', description: 'Lemon liqueur from Amalfi', type: 'Alcoholic', temperature: 'Cold' },
-    { name: 'Aperol Spritz', emoji: '🍊', description: 'Orange aperitif with prosecco', type: 'Cocktail', temperature: 'Cold' }
-  ],
-  mexico: [
-    { name: 'Horchata', emoji: '🥛', description: 'Sweet rice and cinnamon drink', type: 'Traditional', temperature: 'Cold' },
-    { name: 'Tequila', emoji: '🥃', description: 'Agave-based spirit', type: 'Alcoholic', temperature: 'Room Temp' },
-    { name: 'Agua Fresca', emoji: '🍉', description: 'Fresh fruit water', type: 'Soft Drink', temperature: 'Cold' }
-  ],
-  india: [
-    { name: 'Chai', emoji: '🫖', description: 'Spiced milk tea', type: 'Hot Tea', temperature: 'Hot' },
-    { name: 'Lassi', emoji: '🥛', description: 'Yogurt-based drink', type: 'Traditional', temperature: 'Cold' },
-    { name: 'Nimbu Pani', emoji: '🍋', description: 'Spiced lemonade', type: 'Soft Drink', temperature: 'Cold' }
-  ],
-  france: [
-    { name: 'Wine', emoji: '🍷', description: 'World-renowned wines', type: 'Alcoholic', temperature: 'Room Temp' },
-    { name: 'Café au Lait', emoji: '☕', description: 'Coffee with hot milk', type: 'Coffee', temperature: 'Hot' },
-    { name: 'Pastis', emoji: '🥃', description: 'Anise-flavored aperitif', type: 'Alcoholic', temperature: 'Cold' }
-  ],
-  brazil: [
-    { name: 'Caipirinha', emoji: '🍸', description: 'Cachaça with lime and sugar', type: 'Cocktail', temperature: 'Cold' },
-    { name: 'Guaraná', emoji: '🥤', description: 'Brazilian soda made from guaraná', type: 'Soft Drink', temperature: 'Cold' },
-    { name: 'Açaí Juice', emoji: '🍇', description: 'Antioxidant-rich berry juice', type: 'Juice', temperature: 'Cold' }
-  ],
-  egypt: [
-    { name: 'Karkade', emoji: '🌺', description: 'Hibiscus tea', type: 'Herbal Tea', temperature: 'Hot/Cold' },
-    { name: 'Sahlab', emoji: '🥛', description: 'Hot milk drink with orchid root', type: 'Traditional', temperature: 'Hot' },
-    { name: 'Tamarind Juice', emoji: '🌰', description: 'Sweet and sour fruit drink', type: 'Juice', temperature: 'Cold' }
-  ],
-  thailand: [
-    { name: 'Thai Iced Tea', emoji: '🧊', description: 'Sweet tea with condensed milk', type: 'Iced Tea', temperature: 'Cold' },
-    { name: 'Coconut Water', emoji: '🥥', description: 'Fresh from young coconuts', type: 'Natural', temperature: 'Cold' },
-    { name: 'Singha Beer', emoji: '🍺', description: 'Popular Thai lager', type: 'Alcoholic', temperature: 'Cold' }
-  ],
-  morocco: [
-    { name: 'Mint Tea', emoji: '🍃', description: 'Sweet green tea with fresh mint', type: 'Hot Tea', temperature: 'Hot' },
-    { name: 'Almond Milk', emoji: '🥛', description: 'Traditional almond drink', type: 'Traditional', temperature: 'Cold' },
-    { name: 'Orange Juice', emoji: '🍊', description: 'Fresh from Moroccan oranges', type: 'Juice', temperature: 'Cold' }
-  ],
-  greece: [
-    { name: 'Ouzo', emoji: '🥃', description: 'Anise-flavored aperitif', type: 'Alcoholic', temperature: 'Cold' },
-    { name: 'Greek Coffee', emoji: '☕', description: 'Strong, unfiltered coffee', type: 'Coffee', temperature: 'Hot' },
-    { name: 'Frappé', emoji: '🧊', description: 'Iced coffee drink', type: 'Iced Coffee', temperature: 'Cold' }
-  ]
-};
+// Import the comprehensive drinks database
+import drinksData from '../data/drinks.json';
 
 function DrinkSection({ selectedCountry }) {
   const [selectedDrink, setSelectedDrink] = useState(null);
@@ -59,7 +15,7 @@ function DrinkSection({ selectedCountry }) {
 
   useEffect(() => {
     if (selectedCountry && selectedCountry.id) {
-      setDrinks(drinkData[selectedCountry.id] || []);
+      setDrinks(drinksData[selectedCountry.id] || []);
       setSelectedDrink(null);
     } else {
       setDrinks([]);
@@ -73,73 +29,187 @@ function DrinkSection({ selectedCountry }) {
       <div className="flex items-center justify-center min-h-64">
         <div className="text-center">
           <div className="text-6xl mb-4">🍹</div>
-          <h3 className="text-2xl font-bold text-gray-300 mb-2">Popular Drinks</h3>
+          <h3 className="text-2xl font-bold text-gray-300 mb-2">Traditional Drinks</h3>
           <p className="text-gray-400">Select a country to explore its beverages</p>
         </div>
       </div>
     );
   }
 
-  const getTypeColor = (type) => {
-    switch (type) {
-      case 'Alcoholic': return 'text-red-400 bg-red-900/20 border-red-500/30';
-      case 'Coffee': case 'Iced Coffee': return 'text-amber-400 bg-amber-900/20 border-amber-500/30';
-      case 'Hot Tea': case 'Iced Tea': case 'Herbal Tea': return 'text-green-400 bg-green-900/20 border-green-500/30';
-      case 'Cocktail': return 'text-purple-400 bg-purple-900/20 border-purple-500/30';
-      case 'Juice': return 'text-orange-400 bg-orange-900/20 border-orange-500/30';
-      case 'Soft Drink': return 'text-blue-400 bg-blue-900/20 border-blue-500/30';
-      default: return 'text-gray-400 bg-gray-900/20 border-gray-500/30';
-    }
+  const getTemperatureIcon = (temperature) => {
+    if (temperature.includes('Hot')) return <span className="text-red-400 text-lg">🔥</span>;
+    if (temperature.includes('Cold')) return <span className="text-blue-400 text-lg">❄️</span>;
+    if (temperature.includes('Chilled')) return <span className="text-blue-400 text-lg">🧊</span>;
+    return <span className="text-gray-400 text-lg">🌡️</span>;
   };
 
-  const getTemperatureIcon = (temperature) => {
-    if (temperature.includes('Hot')) return '🔥';
-    if (temperature.includes('Cold')) return '❄️';
-    return '🌡️';
+
+
+  const handleCardClick = (drinkId) => {
+    setSelectedDrink(selectedDrink === drinkId ? null : drinkId);
   };
 
   return (
     <div className="bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8">
       <div className="text-center mb-8">
-        <div className="text-6xl mb-4">🍹</div>
-        <h3 className="text-3xl font-bold text-white mb-3">Popular Drinks</h3>
-        <p className="text-gray-300 text-lg">Taste {selectedCountry.name}'s beverages</p>
+        <h3 className="text-3xl font-bold text-white mb-3 flex items-center justify-center">
+          <span className="mr-3">🍹</span>
+          Traditional Drinks
+        </h3>
+        <p className="text-gray-300 text-lg">
+          Discover authentic beverages and cocktails from {selectedCountry.name}
+        </p>
       </div>
 
-      <div className="space-y-4">
-        {drinks.map((drink, index) => (
-          <div
-            key={drink.name}
-            className={`p-6 rounded-xl border-2 transition-all duration-300 cursor-pointer ${
-              selectedDrink === drink.name
-                ? 'border-blue-500 bg-blue-900/20 shadow-lg'
-                : 'border-gray-600 hover:border-blue-500 hover:bg-gray-700/30'
-            }`}
-            onClick={() => setSelectedDrink(selectedDrink === drink.name ? null : drink.name)}
-          >
-            <div className="flex items-center space-x-4">
-              <div className="text-4xl">{drink.emoji}</div>
-              <div className="flex-1">
-                <h4 className="text-xl font-bold text-white mb-2">{drink.name}</h4>
-                <p className="text-gray-300 mb-3">{drink.description}</p>
-                <div className="flex items-center space-x-3">
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getTypeColor(drink.type)}`}>
-                    {drink.type}
-                  </span>
-                  <span className="text-gray-400 flex items-center space-x-2">
-                    <span>{getTemperatureIcon(drink.temperature)}</span>
-                    <span>{drink.temperature}</span>
-                  </span>
+      {/* Drinks Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <AnimatePresence>
+          {drinks.map((drink, index) => (
+            <motion.div
+              key={drink.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ delay: index * 0.1, duration: 0.4 }}
+              className="relative"
+            >
+              <motion.div
+                className={`bg-gray-800/40 backdrop-blur-sm rounded-xl overflow-hidden cursor-pointer transition-all duration-300 focus:outline-none ${
+                  selectedDrink === drink.id
+                    ? 'border-2 border-blue-400 bg-blue-400/20 shadow-lg'
+                    : 'border border-gray-700/50 hover:border-blue-400/40 hover:shadow-lg hover:shadow-blue-400/20 focus:border-2 focus:border-blue-400 focus:shadow-lg focus:shadow-blue-400/20'
+                }`}
+                whileHover={{ y: -5 }}
+                onClick={() => handleCardClick(drink.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleCardClick(drink.id);
+                  }
+                }}
+                tabIndex={0}
+                role="button"
+                aria-expanded={selectedDrink === drink.id}
+                aria-label={`${drink.name} - Click to ${selectedDrink === drink.id ? 'collapse' : 'expand'} details`}
+              >
+                {/* Drink Header */}
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="text-4xl">{drink.emoji}</div>
+                  </div>
+
+                  <h4 className="text-xl font-bold text-white mb-2">{drink.name}</h4>
+                  <p className="text-gray-300 text-sm mb-4 line-clamp-2">{drink.description}</p>
+
+                  {/* Quick Info */}
+                  <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
+                    <div className="flex items-center space-x-2">
+                      {getTemperatureIcon(drink.temperature)}
+                      <span>{drink.temperature}</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      {drink.alcohol_content !== 'non-alcoholic' && (
+                        <BeakerIcon className="w-4 h-4 text-white" />
+                      )}
+                      <span>{drink.alcohol_content}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        ))}
+
+                {/* Expanded Drink Content */}
+                <AnimatePresence>
+                  {selectedDrink === drink.id && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="border-t border-blue-400/20 bg-blue-400/5"
+                    >
+                      <div className="p-6 space-y-6">
+                        {/* Origin Story */}
+                        <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4">
+                          <h5 className="text-lg font-semibold mb-2 text-blue-300 flex items-center space-x-2">
+                            <span>📖</span>
+                            <span>Cultural Story</span>
+                          </h5>
+                          <p className="text-blue-200 text-sm leading-relaxed">
+                            {drink.origin_story}
+                          </p>
+                        </div>
+
+                        {/* Ingredients */}
+                        <div className="bg-green-900/20 border border-green-500/30 rounded-xl p-4">
+                          <h5 className="text-lg font-semibold mb-3 text-green-300 flex items-center space-x-2">
+                            <span>🥄</span>
+                            <span>Ingredients</span>
+                          </h5>
+                          <div className="space-y-2">
+                            {drink.ingredients.map((ingredient, idx) => (
+                              <div key={idx} className="flex items-center justify-between text-sm">
+                                <span className="text-green-200 font-medium">{ingredient.item}</span>
+                                <div className="flex items-center space-x-3 text-green-300">
+                                  <span>{ingredient.quantity}</span>
+                                  <span className="text-green-400">({ingredient.quantity_imperial})</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Serving Details */}
+                        <div className="bg-purple-900/20 border border-purple-500/30 rounded-xl p-4">
+                          <h5 className="text-lg font-semibold mb-3 text-purple-300 flex items-center space-x-2">
+                            <span>🍷</span>
+                            <span>Serving</span>
+                          </h5>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                              <span className="text-purple-200 font-medium">Glassware:</span>
+                              <p className="text-purple-300 mt-1">{drink.glassware}</p>
+                            </div>
+                            <div>
+                              <span className="text-purple-200 font-medium">Garnish:</span>
+                              <p className="text-purple-300 mt-1">{drink.garnish}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Substitution Suggestions */}
+                        <div className="bg-orange-900/20 border border-orange-500/30 rounded-xl p-4">
+                          <h5 className="text-lg font-semibold mb-2 text-orange-300 flex items-center space-x-2">
+                            <span>💡</span>
+                            <span>Substitution Tips</span>
+                          </h5>
+                          <p className="text-orange-200 text-sm leading-relaxed">
+                            {drink.type === 'cocktail' && drink.ingredients.some(i => i.category === 'liqueur') && 
+                              "If you can't find specialty liqueurs, try using similar flavored spirits or syrups. For example, replace Aperol with Campari or a bitter orange liqueur."}
+                            {drink.type === 'traditional_drink' && 
+                              "Traditional ingredients can often be substituted with more accessible alternatives. Look for similar flavors in your local grocery store."}
+                            {drink.type === 'non_alcoholic' && 
+                              "Non-alcoholic versions can be enhanced with fresh herbs, spices, or fruit juices for added complexity."}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+
+              </motion.div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
 
+      {/* Empty State */}
       {drinks.length === 0 && (
-        <div className="text-center py-8">
-          <p className="text-gray-400">No drink information available for this country.</p>
+        <div className="text-center py-16">
+          <div className="w-20 h-20 mx-auto mb-6 text-gray-500 text-4xl">🍹</div>
+          <h3 className="text-2xl font-bold text-gray-300 mb-3">No Drinks Found</h3>
+          <p className="text-gray-400 text-lg">
+            No drinks match the selected type. Try adjusting the filter.
+          </p>
         </div>
       )}
     </div>

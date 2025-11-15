@@ -4,15 +4,53 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Cultural Expo - Discover cultures from around the world"
-    />
+    <meta name="theme-color" content="#8b5cf6" />
+    <meta name="description" content="Explore cultures, cuisines, and traditions from around the world" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Cultural Expo" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="msapplication-TileColor" content="#8b5cf6" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="%PUBLIC_URL%/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="167x167" href="%PUBLIC_URL%/icon-192.png" />
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="%PUBLIC_URL%/static/css/main.css" as="style" />
+    <link rel="preload" href="%PUBLIC_URL%/static/js/main.js" as="script" />
+    
     <title>Cultural Expo</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
   </body>
 </html>

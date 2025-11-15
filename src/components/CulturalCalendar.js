@@ -22,7 +22,6 @@ function CulturalCalendar({ onDateSelect, onAddExperience, onEditExperience }) {
   const [calendarData, setCalendarData] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
   const [hoveredDate, setHoveredDate] = useState(null);
-  const [viewMode, setViewMode] = useState('month'); // 'month' or 'year'
   const [experiences, setExperiences] = useState([]);
 
   const year = currentDate.getFullYear();
@@ -197,7 +196,7 @@ function CulturalCalendar({ onDateSelect, onAddExperience, onEditExperience }) {
       transition={{ duration: 0.6 }}
     >
       {/* Compact Calendar Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4">
+      <div className="bg-gradient-to-r from-accent-primary to-accent-secondary p-4">
         <div className="flex items-center justify-between">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -208,7 +207,7 @@ function CulturalCalendar({ onDateSelect, onAddExperience, onEditExperience }) {
               {MONTHS[month]} {year}
             </h2>
             <p className="text-white text-opacity-80 text-sm flex items-center">
-              <CalendarIcon className="w-4 h-4 mr-1" />
+                              <CalendarIcon className="w-4 h-4 mr-1 text-white" />
               Cultural Journey Calendar
             </p>
           </motion.div>
@@ -226,7 +225,7 @@ function CulturalCalendar({ onDateSelect, onAddExperience, onEditExperience }) {
               whileTap={{ scale: 0.9 }}
               title="Previous month"
             >
-              <ChevronLeftIcon className="w-5 h-5" />
+                              <ChevronLeftIcon className="w-5 h-5 text-white" />
             </motion.button>
             
             <motion.button
@@ -245,45 +244,10 @@ function CulturalCalendar({ onDateSelect, onAddExperience, onEditExperience }) {
               whileTap={{ scale: 0.9 }}
               title="Next month"
             >
-              <ChevronRightIcon className="w-5 h-5" />
+                              <ChevronRightIcon className="w-5 h-5 text-white" />
             </motion.button>
           </motion.div>
         </div>
-
-        {/* Compact Quick Stats */}
-        <motion.div 
-          className="grid grid-cols-3 gap-3 mt-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        >
-          {[
-            { value: experiences.length, label: "Experiences", icon: "🌍" },
-            { value: new Set(experiences.map(exp => exp.country.id)).size, label: "Countries", icon: "🗺️" },
-            { value: Object.keys(calendarData).length, label: "Active Days", icon: "📅" }
-          ].map((stat, index) => (
-            <motion.div 
-              key={stat.label}
-              className="text-center bg-white bg-opacity-10 rounded-lg p-2 backdrop-blur-sm"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5 + (index * 0.1), duration: 0.4 }}
-              whileHover={{ scale: 1.05 }}
-            >
-              <div className="text-lg mb-1">{stat.icon}</div>
-              <motion.div 
-                className="text-xl font-bold text-white"
-                key={stat.value}
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                {stat.value}
-              </motion.div>
-              <div className="text-xs text-white text-opacity-80">{stat.label}</div>
-            </motion.div>
-          ))}
-        </motion.div>
       </div>
 
       {/* Compact Calendar Grid */}
@@ -327,11 +291,11 @@ function CalendarDay({
           : 'text-gray-500 bg-gray-800/20'
       } ${
         isSelected 
-          ? 'bg-blue-600/20 border-blue-500/50' 
+          ? 'bg-accent-primary/20 border-accent-primary/50' 
           : ''
       } ${
         isToday 
-          ? 'bg-blue-500/20 border-blue-400 font-bold' 
+          ? 'bg-accent-secondary/20 border-accent-secondary font-bold' 
           : ''
       }`}
       onClick={onClick}
@@ -340,7 +304,7 @@ function CalendarDay({
       onMouseLeave={() => onHover(false)}
     >
       {/* Day Number */}
-      <div className={`text-xs ${isToday ? 'text-blue-300' : 'text-gray-300'}`}>
+      <div className={`text-xs ${isToday ? 'text-accent-secondary' : 'text-gray-300'}`}>
         {day}
       </div>
 
@@ -354,7 +318,7 @@ function CalendarDay({
 
           {/* Multiple experiences indicator */}
           {experiences.length > 1 && (
-            <div className="absolute top-1 right-1 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+            <div className="absolute top-1 right-1 bg-accent-primary text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
               {experiences.length}
             </div>
           )}

@@ -85,25 +85,16 @@ function ExperienceEntry({ isOpen, onClose, experienceId = null, initialDate = n
     }));
   };
 
-  const validateForm = () => {
-    const errors = {};
-    
-    if (!formData.country) {
-      errors.country = 'Please select a country';
-    }
-    
-    if (!formData.date) {
-      errors.date = 'Please select a date';
-    }
-    
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!validateForm()) {
+    if (!formData.country) {
+      setValidationErrors({ country: 'Please select a country' });
+      return;
+    }
+    
+    if (!formData.date) {
+      setValidationErrors({ date: 'Please select a date' });
       return;
     }
     
@@ -190,8 +181,8 @@ function ExperienceEntry({ isOpen, onClose, experienceId = null, initialDate = n
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-700/50">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600/20 rounded-xl flex items-center justify-center">
-                <GlobeAltIcon className="w-5 h-5 text-blue-400" />
+              <div className="w-10 h-10 bg-accent-primary/20 rounded-xl flex items-center justify-center">
+                <GlobeAltIcon className="w-5 h-5 text-accent-primary" />
               </div>
               <div>
                 <h2 className="text-xl font-bold text-white">
@@ -298,7 +289,7 @@ function ExperienceEntry({ isOpen, onClose, experienceId = null, initialDate = n
                   <button
                     type="button"
                     onClick={() => setShowOptionalFields(!showOptionalFields)}
-                    className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors"
+                    className="text-accent-primary hover:text-accent-secondary text-sm font-medium transition-colors"
                   >
                     {showOptionalFields ? 'Hide' : 'Add'} Optional Details (Food, Drinks, Movies)
                   </button>
@@ -519,7 +510,7 @@ function ExperienceEntry({ isOpen, onClose, experienceId = null, initialDate = n
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="btn btn-secondary"
+                    className="btn btn-accent-secondary"
                   >
                     Back
                   </button>
@@ -537,14 +528,14 @@ function ExperienceEntry({ isOpen, onClose, experienceId = null, initialDate = n
                 <button
                   type="button"
                   onClick={onClose}
-                  className="btn btn-secondary"
+                  className="btn btn-accent-secondary"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isLoading || !formData.country}
-                  className="btn btn-primary"
+                  className="btn btn-accent-primary"
                 >
                   {isLoading ? 'Saving...' : (experienceId ? 'Update Experience' : 'Save Experience')}
                 </button>

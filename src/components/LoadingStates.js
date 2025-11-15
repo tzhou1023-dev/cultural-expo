@@ -65,46 +65,33 @@ export const ListSkeleton = ({ count = 5, className = '' }) => {
   );
 };
 
-// Spinner component
-export const Spinner = ({ size = 'md', className = '', ...props }) => {
+// Enhanced Spinner with cultural theme
+export const Spinner = ({ size = "md", className = "", message = "Loading..." }) => {
   const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-6 h-6',
-    lg: 'w-8 h-8',
-    xl: 'w-12 h-12'
+    sm: "w-4 h-4",
+    md: "w-6 h-6", 
+    lg: "w-8 h-8",
+    xl: "w-12 h-12"
   };
 
   return (
-    <motion.div
-      className={`${sizeClasses[size]} ${className}`}
-      animate={{ rotate: 360 }}
-      transition={{
-        duration: 1,
-        repeat: Infinity,
-        ease: "linear"
-      }}
-      {...props}
-    >
-      <svg
-        className="w-full h-full text-brand-primary"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-        <path
-          className="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        />
-      </svg>
-    </motion.div>
+    <div className={`flex flex-col items-center justify-center ${className}`}>
+      <motion.div
+        className={`${sizeClasses[size]} border-2 border-accent-primary/20 border-t-accent-primary rounded-full`}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+      />
+      {message && (
+        <motion.p 
+          className="mt-3 text-text-secondary text-sm font-medium"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          {message}
+        </motion.p>
+      )}
+    </div>
   );
 };
 
@@ -179,34 +166,118 @@ export const ProgressBar = ({
   );
 };
 
-// Loading overlay component
-export const LoadingOverlay = ({ 
-  isLoading, 
-  children, 
-  message = "Loading...",
-  spinner = true,
-  className = ''
-}) => {
-  if (!isLoading) return children;
-
-  return (
-    <div className={`relative ${className}`}>
-      {children}
+// Enhanced loading overlay
+export const LoadingOverlay = ({ message = "Loading your cultural journey...", showProgress = false, progress = 0 }) => (
+  <motion.div
+    className="fixed inset-0 bg-dark-primary/90 backdrop-blur-sm z-50 flex items-center justify-center"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+  >
+    <div className="text-center max-w-md mx-auto p-8">
       <motion.div
-        className="absolute inset-0 bg-dark-primary bg-opacity-80 backdrop-blur-sm flex items-center justify-center z-50"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
+        className="w-20 h-20 mx-auto mb-6"
+        animate={{ 
+          rotate: 360,
+          scale: [1, 1.1, 1]
+        }}
+        transition={{ 
+          rotate: { duration: 2, repeat: Infinity, ease: "linear" },
+          scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+        }}
       >
-        <div className="text-center">
-          {spinner && <Spinner size="lg" className="mb-4" />}
-          <p className="text-text-secondary">{message}</p>
-        </div>
+        <div className="w-full h-full border-4 border-accent-primary/20 border-t-accent-primary rounded-full" />
       </motion.div>
+      
+      <motion.h3 
+        className="text-xl font-semibold text-text-primary mb-2"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        {message}
+      </motion.h3>
+      
+      {showProgress && (
+        <motion.div 
+          className="w-full bg-dark-tertiary rounded-full h-2 mt-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          <motion.div
+            className="bg-accent-primary h-2 rounded-full"
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.5 }}
+          />
+        </motion.div>
+      )}
     </div>
-  );
-};
+  </motion.div>
+);
+
+// Progress indicator for long operations
+export const ProgressIndicator = ({ current, total, message }) => (
+  <div className="flex items-center space-x-4 p-4 bg-dark-secondary rounded-lg border border-dark-border">
+    <div className="flex-1">
+      <div className="flex justify-between text-sm text-text-secondary mb-1">
+        <span>{message}</span>
+        <span>{current} / {total}</span>
+      </div>
+      <div className="w-full bg-dark-tertiary rounded-full h-2">
+        <motion.div
+          className="bg-accent-primary h-2 rounded-full"
+          initial={{ width: 0 }}
+          animate={{ width: `${(current / total) * 100}%` }}
+          transition={{ duration: 0.3 }}
+        />
+      </div>
+    </div>
+  </div>
+);
+
+// Empty state component
+export const EmptyState = ({ 
+  icon: Icon, 
+  title, 
+  description, 
+  action, 
+  actionText 
+}) => (
+  <motion.div 
+    className="text-center py-12"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6 }}
+  >
+    <motion.div
+      className="w-16 h-16 mx-auto mb-6 bg-dark-secondary rounded-full flex items-center justify-center"
+      whileHover={{ scale: 1.05 }}
+    >
+      <Icon className="w-8 h-8 text-accent-primary" />
+    </motion.div>
+    
+    <h3 className="text-xl font-semibold text-text-primary mb-2">
+      {title}
+    </h3>
+    
+    <p className="text-text-secondary mb-6 max-w-md mx-auto">
+      {description}
+    </p>
+    
+    {action && actionText && (
+      <motion.button
+        onClick={action}
+        className="btn btn-accent-primary"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        {actionText}
+      </motion.button>
+    )}
+  </motion.div>
+);
 
 // Pulse loading for text content
 export const TextSkeleton = ({ lines = 3, className = '' }) => {
@@ -273,6 +344,43 @@ export const ImageSkeleton = ({
   );
 };
 
+// Skeleton loader for country cards
+export const CountryCardSkeleton = () => (
+  <motion.div 
+    className="bg-dark-secondary rounded-xl p-6 border border-dark-border"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.4 }}
+  >
+    <div className="flex items-center space-x-4 mb-4">
+      <div className="w-12 h-12 bg-dark-tertiary rounded-lg animate-pulse" />
+      <div className="flex-1">
+        <div className="h-4 bg-dark-tertiary rounded animate-pulse mb-2" />
+        <div className="h-3 bg-dark-tertiary rounded animate-pulse w-2/3" />
+      </div>
+    </div>
+    <div className="space-y-2">
+      <div className="h-3 bg-dark-tertiary rounded animate-pulse" />
+      <div className="h-3 bg-dark-tertiary rounded animate-pulse w-4/5" />
+    </div>
+  </motion.div>
+);
+
+// Skeleton loader for calendar
+export const CalendarSkeleton = () => (
+  <div className="grid grid-cols-7 gap-2">
+    {Array.from({ length: 35 }).map((_, i) => (
+      <motion.div
+        key={i}
+        className="h-16 bg-dark-secondary rounded-lg animate-pulse"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: i * 0.02 }}
+      />
+    ))}
+  </div>
+);
+
 export default {
   Skeleton,
   Shimmer,
@@ -283,5 +391,9 @@ export default {
   ProgressBar,
   LoadingOverlay,
   TextSkeleton,
-  ImageSkeleton
+  ImageSkeleton,
+  CountryCardSkeleton,
+  CalendarSkeleton,
+  ProgressIndicator,
+  EmptyState
 };

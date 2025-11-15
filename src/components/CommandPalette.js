@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  MagnifyingGlassIcon,
+import {
   GlobeAltIcon,
   PlusIcon,
-  ShoppingBagIcon,
-  ChartBarIcon,
+  HomeIcon,
+  SparklesIcon,
+  CommandLineIcon,
   CalendarIcon,
-  ArrowRightIcon
+  MagnifyingGlassIcon
 } from '@heroicons/react/24/outline';
 
 const CommandPalette = ({ isOpen, onClose, onCommand }) => {
@@ -40,22 +40,6 @@ const CommandPalette = ({ isOpen, onClose, onCommand }) => {
       icon: GlobeAltIcon,
       keywords: ['countries', 'explore', 'discover', 'browse'],
       action: () => onCommand('explore-countries')
-    },
-    {
-      id: 'shopping-list',
-      title: 'Shopping List',
-      description: 'View your cultural shopping list',
-      icon: ShoppingBagIcon,
-      keywords: ['shopping', 'list', 'buy', 'ingredients'],
-      action: () => onCommand('shopping-list')
-    },
-    {
-      id: 'progress-dashboard',
-      title: 'Progress Dashboard',
-      description: 'View your cultural exploration progress',
-      icon: ChartBarIcon,
-      keywords: ['progress', 'dashboard', 'stats', 'analytics'],
-      action: () => onCommand('progress-dashboard')
     }
   ];
 
@@ -88,13 +72,13 @@ const CommandPalette = ({ isOpen, onClose, onCommand }) => {
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        setSelectedIndex(prev => 
+        setSelectedIndex(prev =>
           prev < filteredCommands.length - 1 ? prev + 1 : 0
         );
         break;
       case 'ArrowUp':
         e.preventDefault();
-        setSelectedIndex(prev => 
+        setSelectedIndex(prev =>
           prev > 0 ? prev - 1 : filteredCommands.length - 1
         );
         break;
@@ -165,7 +149,7 @@ const CommandPalette = ({ isOpen, onClose, onCommand }) => {
           initial={{ opacity: 0, scale: 0.95, y: -20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: -20 }}
-          transition={{ 
+          transition={{
             duration: 0.2,
             type: "spring",
             stiffness: 300,
@@ -176,20 +160,19 @@ const CommandPalette = ({ isOpen, onClose, onCommand }) => {
           aria-labelledby="command-palette-title"
         >
           {/* Header */}
-          <div className="flex items-center px-4 py-3 border-b border-dark-border">
-            <MagnifyingGlassIcon className="w-5 h-5 text-text-tertiary mr-3" aria-hidden="true" />
+          <div className="flex items-center space-x-2 p-4 border-b border-gray-700/50">
+            <MagnifyingGlassIcon className="w-5 h-5 text-white" />
             <input
               ref={inputRef}
               type="text"
-              placeholder="Search commands..."
+              placeholder="Search commands, countries, or actions..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="command-palette-input"
-              aria-label="Command search"
-              id="command-palette-input"
+              className="command-palette-input flex-1 bg-transparent border-none outline-none text-lg placeholder-gray-500"
             />
-            <div className="command-palette-kbd">
-              ⌘K
+            <div className="flex items-center space-x-2 text-sm text-gray-500">
+              <span>⌘K</span>
+              <span>to close</span>
             </div>
           </div>
 
@@ -197,41 +180,28 @@ const CommandPalette = ({ isOpen, onClose, onCommand }) => {
           <div className="max-h-80 overflow-y-auto">
             {filteredCommands.length > 0 ? (
               <div role="listbox" aria-labelledby="command-palette-input">
-                {filteredCommands.map((command, index) => {
-                  const Icon = command.icon;
-                  const isSelected = index === selectedIndex;
-                  
-                  return (
-                    <motion.div
-                      key={command.id}
-                      className={`command-palette-item ${isSelected ? 'selected' : ''}`}
-                      onClick={() => handleItemClick(command)}
-                      role="option"
-                      aria-selected={isSelected}
-                      whileHover={{ backgroundColor: 'rgba(33, 38, 45, 0.8)' }}
-                      transition={{ duration: 0.15 }}
-                    >
-                      <Icon className="w-5 h-5 text-text-tertiary mr-3" aria-hidden="true" />
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium text-text-primary">
-                          {command.title}
-                        </div>
-                        <div className="text-xs text-text-tertiary">
-                          {command.description}
-                        </div>
+                {filteredCommands.map((command, index) => (
+                  <motion.div
+                    key={command.id}
+                    className={`command-palette-item ${selectedIndex === index ? 'selected' : ''}`}
+                    onClick={() => handleItemClick(command)}
+                    whileHover={{ backgroundColor: 'rgba(168, 85, 247, 0.1)' }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-accent-primary/20 rounded-lg flex items-center justify-center">
+                        <command.icon className="w-4 h-4 text-white" />
                       </div>
-                      {isSelected && (
-                        <motion.div
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.15 }}
-                        >
-                          <ArrowRightIcon className="w-4 h-4 text-brand-primary" aria-hidden="true" />
-                        </motion.div>
-                      )}
-                    </motion.div>
-                  );
-                })}
+                      <div className="flex-1">
+                        <div className="font-medium text-white">{command.title}</div>
+                        <div className="text-sm text-gray-400">{command.description}</div>
+                      </div>
+                      <div className="command-palette-kbd">{command.shortcut}</div>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             ) : (
               <div className="empty-state py-8">

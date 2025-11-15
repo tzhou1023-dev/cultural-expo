@@ -107,7 +107,7 @@ const Toast = ({ toast, onRemove }) => {
           whileTap={{ scale: 0.9 }}
           aria-label="Dismiss notification"
         >
-          <XMarkIcon className="w-4 h-4" />
+                          <XMarkIcon className="w-4 h-4 text-white" />
         </motion.button>
       </div>
     </motion.div>
